@@ -4,7 +4,7 @@ This web application helps students and remote workers find the best cafés and 
 
 
 ## How to run
-git clone https://github.com/sztng/wad2.git
+git clone https://github.com/vanetiaho/wad22.git
 
 
 ## Group members:
