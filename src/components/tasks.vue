@@ -22,23 +22,25 @@
 
 <style scoped>
 .cardContainer {
-    padding: 10px;
     display: flex;
+    flex-wrap: wrap;       /* allows cards to move to next line if needed */
     justify-content: center;
-    margin: 50px 400px 50px 400px;
+    gap: 20px;             /* space between cards */
+    padding: 20px;         /* padding around container */
+    margin: 50px auto;     /* center container horizontally */
+    max-width: 1200px; 
 }
 
 .card {
+    flex: 1 1 300px; 
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     transition: 0.3s;
     border-radius: 5px;
     background-color: #fdf9ee;
     color: #6d412a;
-    padding: 90px 5px 90px 5px;
-    margin: 10px;
-    width: 100%;
+    padding: 60px 20px; 
     text-align: center;
-    text-decoration: none;
+    min-width: 250px;  
 }
 
 .card:hover {
