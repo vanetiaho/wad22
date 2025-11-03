@@ -1,13 +1,7 @@
 <template>
   <div class="page-wrapper">
-
+    <Navbar />
     <!-- LOGIN CONTENT -->
-    <div class="back-container">
-      <button class="btn-primary" @click="goBack">
-        <span class="arrow">←</span>
-        <span>Go Back</span>
-      </button>
-    </div>
     <div class="auth-container">
       <div class="auth-card">
         <h1>{{ isLogin ? 'WELCOME BACK' : 'JOIN US' }}</h1>
@@ -42,9 +36,15 @@
               placeholder="Password"
               minlength="6"
             />
-            <span class="toggle-visibility" @click="showPassword = !showPassword">
-              {{ showPassword ? '🙈' : '👁️' }}
-            </span>
+          <span class="toggle-visibility" @click="showPassword = !showPassword">
+            <svg v-if="showPassword" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-5 0-9.27-3-11-7 1.056-2.145 2.828-3.877 5.064-4.822M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3l18 18M10.583 10.583a3 3 0 014.834 4.834M12 12c5 0 9.27-3 11-7-1.056-2.145-2.828-3.877-5.064-4.822" />
+            </svg>
+          </span>
+
           </div>
 
           <div v-if="isLogin" class="forgot-password">
@@ -72,6 +72,7 @@
 </template>
 
 <script setup>
+import Navbar from '../components/navbar.vue'
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuth } from './useAuth'
@@ -106,20 +107,9 @@ const handleSubmit = async () => {
   }
 }
 
-function goBack() {
-  if (window.history.length > 1) router.back()
-  else router.push('/')
-}
-
 </script>
 
 <style scoped>
-.back-container {
-  max-width: 200px;
-  display: flex;
-  justify-content: left;
-  margin-top: 2rem;
-}
 
 .page-wrapper {
   min-height: 100vh;
@@ -205,8 +195,12 @@ input::placeholder {
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
-  font-size: 20px;
-  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  color: #6f4a37;
 }
 
 .forgot-password {
@@ -286,55 +280,6 @@ input::placeholder {
 
 .toggle-auth a:hover {
   color: #d4b896;
-}
-
-/* FOOTER */
-footer {
-  background: linear-gradient(135deg, rgba(209, 190, 170, 0.5), rgba(180, 160, 140, 0.4));
-  padding: 35px 50px;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  backdrop-filter: blur(8px);
-  border-top: 1px solid rgba(111, 63, 36, 0.3);
-}
-
-.footer-left {
-  font-size: 17px;
-  font-weight: 900;
-  border-top: 2px solid #5c3d2e;
-  border-bottom: 2px solid #5c3d2e;
-  padding-top: 6px;
-  padding-bottom: 6px;
-  color: #3d2817;
-  letter-spacing: 1px;
-  font-family: 'Georgia', serif;
-  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3);
-}
-
-.footer-right ul {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  list-style: none;
-  text-align: right;
-  font-size: 15px;
-  color: #3d2817;
-  font-weight: 700;
-  font-family: 'Georgia', serif;
-  margin: 0;
-  padding: 0;
-}
-
-.footer-right ul li {
-  cursor: pointer;
-  transition: color 0.3s, transform 0.2s;
-  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3);
-}
-
-.footer-right ul li:hover {
-  color: #6f4a37;
-  transform: translateX(-3px);
 }
 
 /* RESPONSIVE - Tablet and Mobile */
