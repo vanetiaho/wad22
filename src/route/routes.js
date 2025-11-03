@@ -9,22 +9,17 @@ import tasks from '../components/tasks.vue';
 import crowd from '../components/crowd.vue';
 import reward from '../components/reward.vue';
 import reviews from '../components/reviews.vue';
-import profile_home from '../components/profile_home.vue';
+import profile_home from '../components/profile_home.vue'; // add in user icon hover
 import cafe_review from '../components/cafe_review.vue';
 import map from "../components/map.vue";
 import studyPlanner from "@/components/studyPlanner.vue";
 import camera from "@/components/camera.vue";
 import login_view from "../components/login_view.vue";
 import my_reviews from "../components/my_reviews.vue";
-import favourites from "../components/favourites.vue";
+import favourites from "../components/favourites.vue"; // add in user icon hover
 
 const history = createWebHistory()
 const routes = [
-
-	// {
-	// 	path: "/",
-	// 	redirect: "/login"
-	// },
 
 	{
 		path: "/",
