@@ -1,10 +1,27 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
+import supabase from '../config/supabaseClient'; 
 import { useRouter } from 'vue-router';
 import { logout } from '../../lib/api/auth';
 
 const router = useRouter();
 const menuOpen = ref(false);
+const showDropdown = ref(false);
+const user = ref(null);
+
+const handleClickOutside = (event) => {
+  const container = document.querySelector('.user-icon-wrapper');
+  if (container && !container.contains(event.target)) {
+    showDropdown.value = false;
+  }
+};
+
+onMounted(() => document.addEventListener('click', handleClickOutside));
+onBeforeUnmount(() => document.removeEventListener('click', handleClickOutside));
+onMounted(async () => {
+  const { data } = await supabase.auth.getUser();
+  user.value = data.user;
+});
 
 const handleLogout = async () => {
   try {
@@ -29,12 +46,12 @@ const handleLogout = async () => {
       <div class="logo desktop-only">MAP & MUG</div>
       <ul class="nav-links">
         <li @click="menuOpen = false"><RouterLink to="/">HOME</RouterLink></li>
+        <li @click="menuOpen = false"><RouterLink to="/map">MAP</RouterLink></li>
         <li @click="menuOpen = false"><RouterLink to="/reviews">COMMUNITY</RouterLink></li>
-        <li @click="menuOpen = false"><RouterLink to="/profile_home">PROFILE</RouterLink></li>
-        <li @click="menuOpen = false"><RouterLink to="/favourites">FAVOURITES</RouterLink></li>
         <li @click="menuOpen = false"><RouterLink to="/tasks">TASKS</RouterLink></li>
         <li @click="menuOpen = false"><RouterLink to="/reward">REWARDS</RouterLink></li>
-        <li @click="menuOpen = false"><RouterLink to="/map">MAP</RouterLink></li>
+        <li @click="menuOpen = false"><RouterLink to="/camera">STUDY STREAKS⚡</RouterLink></li>
+        
       </ul>
     </div>
 
@@ -42,10 +59,26 @@ const handleLogout = async () => {
     <div class="mobile-logo">MAP & MUG</div>
     
     <div class="nav-right">
-      <button class="user-icon" @click="handleLogout">
-        👤
-      </button>
+  <div class="user-icon-wrapper">
+    <div class="user-icon" @click="showDropdown = !showDropdown">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#6f3f24" viewBox="0 0 24 24">
+        <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+      </svg>
     </div>
+
+    <!-- Dropdown menu -->
+    <div v-if="showDropdown" class="user-dropdown">
+      <template v-if="user">
+        <a @click="$router.push('/profile_home')">Profile</a>
+        <a @click="$router.push('/favourites')">Favourites</a>
+        <a @click="handleLogout">Logout</a>
+      </template>
+      <template v-else>
+        <a @click="$router.push('/login')">Sign In</a>
+      </template>
+    </div>
+  </div>
+</div>
   </nav>
 
   <!-- Overlay for mobile menu -->
@@ -63,7 +96,6 @@ const handleLogout = async () => {
   position: sticky;
   top: 0;
   z-index: 1000;
-  position: relative;
 }
 
 .hamburger {
@@ -160,7 +192,9 @@ const handleLogout = async () => {
   gap: 20px;
   position: relative;
 }
-
+.user-icon-wrapper {
+  position: relative;
+}
 .user-icon {
   width: 38px;
   height: 38px;
@@ -170,10 +204,8 @@ const handleLogout = async () => {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
   transition: transform 0.2s, box-shadow 0.3s;
-  border: none;
 }
 
 .user-icon:hover {
@@ -181,10 +213,35 @@ const handleLogout = async () => {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-.menu-overlay {
+/* .menu-overlay {
   display: none;
+} */
+.user-dropdown {
+  position: absolute;
+  top: 45px;
+  right: 0;
+  background-color: #6f3f24;
+  padding: 10px 0;
+  border-radius: 8px;
+  min-width: 130px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
 }
 
+.user-dropdown a {
+  padding: 10px 20px;
+  color: #fbe8d3;
+  text-decoration: none;
+  font-weight: bold;
+  font-family: 'Georgia', serif;
+  transition: background 0.2s;
+}
+
+.user-dropdown a:hover {
+  background-color: rgba(255,255,255,0.1);
+}
 /* RESPONSIVE - Tablet and Mobile */
 @media (max-width: 1024px) {
   .navbar {
@@ -225,6 +282,7 @@ const handleLogout = async () => {
 
   .nav-left.menu-open {
     left: 0;
+    z-index: 1001;
   }
 
   .menu-overlay {
@@ -235,7 +293,7 @@ const handleLogout = async () => {
     width: 100%;
     height: 100vh;
     background: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
+    z-index: 999;
   }
 
   .nav-links {
