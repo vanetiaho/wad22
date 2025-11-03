@@ -1,6 +1,16 @@
 <template>
   <div class="reviews-section">
     <h1>REVIEWS</h1>
+    <div class="search-bar-container">
+      <input
+        type="text"
+        v-model="searchQuery"
+        @input="filterCafes"
+        placeholder="Search cafes..."
+        class="search-bar"
+      />
+    </div>
+
     <div class="reviews-grid">
       <div
         v-for="cafe in cafes"
@@ -41,13 +51,23 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import supabase from '../config/supabaseClient'
 import { addFavourite, removeFavourite, getFavouriteCafes } from '../../lib/api/favourites'
-
+const searchQuery = ref('')
 const cafes = ref([])
 const favouriteIds = ref(new Set())
 const placeholderImage = 'https://via.placeholder.com/200'
+
+const filteredCafes = ref([])
+
+function filterCafes() {
+  const query = searchQuery.value.toLowerCase()
+  filteredCafes.value = cafes.value.filter(cafe =>
+    cafe.cafe_name.toLowerCase().includes(query) ||
+    cafe.address.toLowerCase().includes(query)
+  )
+}
 
 async function loadCafes() {
   const { data, error } = await supabase.from('cafes').select('*')
@@ -91,6 +111,10 @@ async function toggleFavourite(cafeId) {
 onMounted(() => {
   loadCafes()
   loadFavourites()
+})
+// Update filteredCafes whenever cafes load
+watch(cafes, () => {
+  filteredCafes.value = cafes.value
 })
 </script>
 
@@ -182,4 +206,22 @@ onMounted(() => {
 .heart-btn.is-favourite {
   background-color: rgba(255, 200, 200, 0.95);
 }
+
+.search-bar-container {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  padding: 30px 0;
+  border-bottom: 30px 
+}
+
+.search-bar {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
 </style>
