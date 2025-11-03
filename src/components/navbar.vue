@@ -246,8 +246,10 @@ const handleLogout = async () => {
 @media (max-width: 1024px) {
   .navbar {
     flex-direction: row;
-    justify-content: center;
-    padding: 18px 50px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 20px;
+    height: 70px;
     background: linear-gradient(135deg, #6f3f24 0%, #8b5a3f 100%);
   }
 
