@@ -1,8 +1,14 @@
+
 <template>
   <div class="cafe-review-page">
+    <!-- Back Button -->
     <button class="back-btn" @click="$router.back()">
-      <img :src="ArrowLeft" class="icon-back" />
-      Back</button>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#000" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M15 18l-6-6 6-6"/>
+      </svg>
+      Back
+    </button>
+
     <!-- Cafe Info -->
     <div class="cafe-header">
       <div class="header-content">
@@ -12,24 +18,29 @@
           <div class="average-rating">
             Average Rating: 
             <span v-for="n in 5" :key="n" class="star">
-              <img 
-                :src="getStarIcon(n)" 
-                class="star-icon" 
-              />
+              <svg v-if="averageRating >= n" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#FFD700" viewBox="0 0 24 24">
+                <path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.777 1.4 8.17L12 18.896l-7.334 3.861 1.4-8.17L.132 9.21l8.2-1.192z"/>
+              </svg>
+              <svg v-else xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#FFD700" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.777 1.4 8.17L12 18.896l-7.334 3.861 1.4-8.17L.132 9.21l8.2-1.192z"/>
+              </svg>
             </span>
             ({{ averageRating.toFixed(1) }})
           </div>
         </div>
 
+        <!-- Heart Favorite Button -->
         <button 
           @click="toggleFavourite"
           class="heart-btn-large"
           :class="{ 'is-favourite': isFavourite }"
         >
-          <img
-            :src="isFavourite ? HeartFilled : HeartOutline"
-            class="heart-icon"
-          />
+          <svg v-if="isFavourite" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="red" viewBox="0 0 24 24">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+          <svg v-else xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" stroke="red" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
         </button>
       </div>
     </div>
@@ -42,10 +53,14 @@
         </div>
         <div class="carousel-controls">
           <button @click="prevImage">
-            <img :src="ArrowLeft" class="arrow-icon" />
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#000" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M15 18l-6-6 6-6"/>
+            </svg>
           </button>
           <button @click="nextImage">
-            <img :src="ArrowRight" class="arrow-icon" />
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#000" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M9 6l6 6-6 6"/>
+            </svg>
           </button>
         </div>
       </div>
@@ -59,10 +74,12 @@
             <span class="review-user">{{ review.name }}</span>
             <span class="review-rating">
               <span v-for="n in 5" :key="n" class="star">
-                <img 
-                  :src="review.rating >= n ? StarFilled : StarOutline"
-                  class="star-icon"
-                />
+                <svg v-if="review.rating >= n" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#FFD700" viewBox="0 0 24 24">
+                  <path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.777 1.4 8.17L12 18.896l-7.334 3.861 1.4-8.17L.132 9.21l8.2-1.192z"/>
+                </svg>
+                <svg v-else xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#FFD700" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.777 1.4 8.17L12 18.896l-7.334 3.861 1.4-8.17L.132 9.21l8.2-1.192z"/>
+                </svg>
               </span>
             </span>
           </div>
@@ -72,9 +89,10 @@
     </div>
 
     <!-- Floating add review button -->
-    <!-- <router-link :to="`/add_review?cafe_id=${cafe.id}`" class="add-review-btn">+</router-link> -->
     <button class="add-review-btn" @click="showModal = true">Add Review</button>
   </div>
+
+  <!-- Modal -->
   <div v-if="showModal" class="modal-overlay" @click.self="closeModal">
     <div class="modal-content">
       <h2>Add a Review for {{ cafe.cafe_name }}</h2>
@@ -90,10 +108,12 @@
             @mouseleave="resetHover"
             :class="{ selected: n <= (hoverRating || newReview.rating) }"
           >
-            <img
-                :src="n <= (hoverRating || newReview.rating) ? StarFilled : StarOutline"
-                class="star-icon"
-              />
+            <svg v-if="n <= (hoverRating || newReview.rating)" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#FFD700" viewBox="0 0 24 24">
+              <path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.777 1.4 8.17L12 18.896l-7.334 3.861 1.4-8.17L.132 9.21l8.2-1.192z"/>
+            </svg>
+            <svg v-else xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#FFD700" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.777 1.4 8.17L12 18.896l-7.334 3.861 1.4-8.17L.132 9.21l8.2-1.192z"/>
+            </svg>
           </span>
         </div>
 
@@ -104,7 +124,9 @@
       </form>
 
       <button class="close-btn" @click="closeModal">
-        <img :src="CloseIcon" class="close-icon" />
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#000" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
       </button>
     </div>
   </div>
@@ -115,44 +137,30 @@ import { ref, onMounted } from 'vue'
 import supabase from '../config/supabaseClient'
 import { useRoute } from 'vue-router'
 import { addFavourite, removeFavourite, checkIfFavourite } from '../../lib/api/favourites'
-import StarFilled from '@/components/icons/StarFilled.svg'
-import StarOutline from '@/components/icons/StarOutline.svg'
-import HeartFilled from '@/components/icons/HeartFilled.svg'
-import HeartOutline from '@/components/icons/HeartOutline.svg'
-import ArrowLeft from '@/components/icons/ArrowLeft.svg'
-import ArrowRight from '@/components/icons/ArrowRight.svg'
-import CloseIcon from '@/components/icons/Close.svg'
-
 
 const userId = ref(null)
 const username = ref('')
 
 onMounted(async () => {
   const { data: { user } } = await supabase.auth.getUser()
-  
   if (user) {
     userId.value = user.id
-    
     const { data: profile } = await supabase
       .from('profiles')
       .select('username')
       .eq('id', user.id)
       .single()
-    
     if (profile) username.value = profile.username
   }
 })
 
-
+const route = useRoute()
+const cafeId = route.params.id
 
 const isFavourite = ref(false)
-
 async function checkFavouriteStatus() {
-  try {
-    isFavourite.value = await checkIfFavourite(cafeId)
-  } catch (error) {
-    console.error('Error checking favourite status:', error)
-  }
+  try { isFavourite.value = await checkIfFavourite(cafeId) }
+  catch (error) { console.error('Error checking favourite status:', error) }
 }
 
 async function toggleFavourite() {
@@ -164,22 +172,10 @@ async function toggleFavourite() {
       await addFavourite(cafeId)
       isFavourite.value = true
     }
-  } catch (error) {
-    console.error('Error toggling favourite:', error)
-    alert('Failed to update favourite. Please try again.')
-  }
+  } catch (error) { console.error('Error toggling favourite:', error); alert('Failed to update favourite.') }
 }
 
-const route = useRoute()
-const cafeId = route.params.id
-console.log('Route params:', route.params)
-
-
-const cafe = ref({
-  cafe_name: '',
-  address: '',
-  image_url: []
-})
+const cafe = ref({ cafe_name: '', address: '', image_url: [] })
 const reviews = ref([])
 const averageRating = ref(0)
 
@@ -187,34 +183,19 @@ const averageRating = ref(0)
 const currentIndex = ref(0)
 const currentImage = ref('')
 
-// Load cafe data
 async function loadCafe() {
-  const { data, error } = await supabase
-    .from('cafes')
-    .select('*')
-    .eq('id', cafeId)
-    .single()
-  if (error) {
-    console.error('Error loading cafe:', error)
-  } else {
-    console.log('Cafe loaded:', data)
+  const { data, error } = await supabase.from('cafes').select('*').eq('id', cafeId).single()
+  if (error) console.error('Error loading cafe:', error)
+  else {
     cafe.value = data
-    if (Array.isArray(cafe.value.image_url) && cafe.value.image_url.length > 0) {
-      currentImage.value = cafe.value.image_url[0]
-    }
+    if (Array.isArray(cafe.value.image_url) && cafe.value.image_url.length > 0) currentImage.value = cafe.value.image_url[0]
   }
 }
 
-// Load reviews for this cafe
 async function loadReviews() {
-  const { data, error } = await supabase
-    .from('reviews')
-    .select('*')
-    .eq('cafe_id', cafeId)
-    .order('review_id', { ascending: false })
-  if (error) {
-    console.error('Error loading reviews:', error)
-  } else {
+  const { data, error } = await supabase.from('reviews').select('*').eq('cafe_id', cafeId).order('review_id', { ascending: false })
+  if (error) console.error('Error loading reviews:', error)
+  else {
     reviews.value = data
     if (reviews.value.length > 0) {
       const total = reviews.value.reduce((sum, r) => sum + r.rating, 0)
@@ -223,8 +204,6 @@ async function loadReviews() {
   }
 }
 
-
-// Carousel controls
 function nextImage() {
   if (Array.isArray(cafe.value.image_url) && cafe.value.image_url.length > 0) {
     currentIndex.value = (currentIndex.value + 1) % cafe.value.image_url.length
@@ -238,94 +217,41 @@ function prevImage() {
   }
 }
 
-onMounted(() => {
-  loadCafe()
-  loadReviews()
-  checkFavouriteStatus()
-})
+onMounted(() => { loadCafe(); loadReviews(); checkFavouriteStatus() })
 
-
-// --- Modal logic ---
+// Modal logic
 const showModal = ref(false)
 const loading = ref(false)
 const hoverRating = ref(0)
-const newReview = ref({
-  rating: 0,
-  comment: '',
-  cafe_id: cafeId, // auto-linked to the current cafe
-})
+const newReview = ref({ rating: 0, comment: '', cafe_id: cafeId })
 
-function setRating(n) {
-  newReview.value.rating = n
-}
-function setHover(n) {
-  hoverRating.value = n
-}
-function resetHover() {
-  hoverRating.value = 0
-}
-
-function closeModal() {
-  showModal.value = false
-}
-function getStarIcon(n) {
-  if (averageRating.value >= n) {
-    return StarFilled                  // full
-  } else if (averageRating.value >= n - 0.5) {
-    return StarHalf                    // ✅ add a half-star icon
-  } else {
-    return StarOutline                 // empty
-  }
-}
-
+function setRating(n) { newReview.value.rating = n }
+function setHover(n) { hoverRating.value = n }
+function resetHover() { hoverRating.value = 0 }
+function closeModal() { showModal.value = false }
 
 async function submitReview() {
-  if (!newReview.value.comment || !newReview.value.rating) {
-    alert('Please provide both a rating and comment.')
-    return
-  }
+  if (!newReview.value.comment || !newReview.value.rating) { alert('Please provide both rating and comment.'); return }
 
   loading.value = true
-  const { error } = await supabase
-    .from('reviews')
-    .insert([
-      {
-        cafe_id: cafeId,
-        user_id: userId.value,
-        name : username.value,
-        rating: newReview.value.rating,
-        comment: newReview.value.comment,
-      },
-    ])
-
+  const { error } = await supabase.from('reviews').insert([{
+    cafe_id: cafeId,
+    user_id: userId.value,
+    name: username.value,
+    rating: newReview.value.rating,
+    comment: newReview.value.comment,
+  }])
   loading.value = false
 
-  if (error) {
-    console.error('Error adding review:', error)
-    alert('Failed to submit review.')
-  } else {
-      const { data: pointsData, error: pointsError } = await supabase
-        .from("points")
-        .insert({
-          user_id: userId.value,
-          amount: 7,
-          reason: "Review submitted",
-          earned_at: new Date(),
-          is_used: false,
-      });
-
-      if (pointsError) {
-        console.error("POINTS INSERT ERROR:", pointsError);
-      } else {
-        console.log("POINTS INSERT SUCCESS:", pointsData);
-      }
-
+  if (error) alert('Failed to submit review.')
+  else {
     alert('Review added successfully!')
     closeModal()
-    loadReviews() // reload updated reviews
+    loadReviews()
   }
 }
 </script>
+
 
 <style scoped>
 .cafe-review-page {
