@@ -5,17 +5,26 @@ import App from './App.vue'
 import router from './route/routes'
 
 // --- Font Awesome setup ---
+// import { library } from '@fortawesome/fontawesome-svg-core'
+// import { fas } from '@fortawesome/free-solid-svg-icons'
+// import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
+// import {
+// 	faMagnifyingGlass,
+// 	faAngleDown,
+// } from "@fortawesome/free-solid-svg-icons";
+
+// // Add icons to the library
+// library.add(faMagnifyingGlass, faAngleDown);
+
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { far } from '@fortawesome/free-regular-svg-icons'
+import { fab } from '@fortawesome/free-brands-svg-icons'
 
-import {
-	faMagnifyingGlass,
-	faAngleDown,
-} from "@fortawesome/free-solid-svg-icons";
+library.add(fas, far, fab)
 
-// Add icons to the library
-library.add(faMagnifyingGlass, faAngleDown);
 
 const app = createApp(App)
 app.use(router)
