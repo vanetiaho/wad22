@@ -17,19 +17,20 @@ const fetchActivePoints = async () => {
   try {
     const now = new Date().toISOString();
 
+    // Fetch all non-used points for the user
     const { data, error: fetchError } = await supabase
       .from('points')
       .select('*')
       .eq('user_id', currentUserId.value)
       .eq('is_used', false)
-      .gte('expires_at', now)
       .order('earned_at', { ascending: false });
 
     if (fetchError) {
       console.error('Error fetching active points:', fetchError);
       error.value = fetchError.message;
     } else {
-      activePoints.value = data;
+      // Filter in JavaScript - show points that haven't expired or have no expiration
+      activePoints.value = data.filter(p => !p.expires_at || p.expires_at >= now);
     }
   } catch (err) {
     console.error('Unexpected error:', err);
@@ -42,18 +43,19 @@ const fetchExpiredPoints = async () => {
   try {
     const now = new Date().toISOString();
 
+    // Fetch all points for the user
     const { data, error: fetchError } = await supabase
       .from('points')
       .select('*')
       .eq('user_id', currentUserId.value)
-      .lt('expires_at', now)
       .order('expires_at', { ascending: false });
 
     if (fetchError) {
       console.error('Error fetching expired points:', fetchError);
       error.value = fetchError.message;
     } else {
-      expiredPoints.value = data;
+      // Filter in JavaScript - show only expired points (expires_at exists and is in the past)
+      expiredPoints.value = data.filter(p => p.expires_at && p.expires_at < now);
     }
   } catch (err) {
     console.error('Unexpected error:', err);
