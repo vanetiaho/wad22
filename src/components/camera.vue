@@ -184,8 +184,12 @@ onBeforeUnmount(() => {
       </div>
 
       <!-- before camera is started -->
-      <div v-if="!isCameraActive && !capturedPhoto" class="startScreen">
-        <div class="cameraIcon">📷</div>
+     <div v-if="!isCameraActive && !capturedPhoto" class="startScreen">
+        <div class="cameraIcon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 5px;">
+            <path d="M20 5h-3.586l-1.707-1.707A.996.996 0 0 0 14 3h-4c-.267 0-.519.105-.707.293L7.586 5H4c-1.103 0-2 .897-2 2v12c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2V7c0-1.103-.897-2-2-2zm-8 14c-3.309 0-6-2.691-6-6s2.691-6 6-6 6 2.691 6 6-2.691 6-6 6zm0-10a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"/>
+          </svg>
+        </div>
         <button @click="startCamera" class="actionBtn primaryBtn">
           start camera !
         </button>
@@ -203,7 +207,10 @@ onBeforeUnmount(() => {
 
         <div class="cameraControls">
           <button @click="takePicture" class="actionBtn captureBtn">
-            📸 Take Picture
+             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 5px;">
+            <path d="M20 5h-3.586l-1.707-1.707A.996.996 0 0 0 14 3h-4c-.267 0-.519.105-.707.293L7.586 5H4c-1.103 0-2 .897-2 2v12c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2V7c0-1.103-.897-2-2-2zm-8 14c-3.309 0-6-2.691-6-6s2.691-6 6-6 6 2.691 6 6-2.691 6-6 6zm0-10a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"/>
+          </svg>
+            Take Picture
           </button>
           <button @click="stopCamera" class="actionBtn stopBtn">
             ✕ Close Camera
