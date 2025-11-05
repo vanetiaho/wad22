@@ -137,6 +137,7 @@ import { ref, onMounted } from 'vue'
 import supabase from '../config/supabaseClient'
 import { useRoute } from 'vue-router'
 import { addFavourite, removeFavourite, checkIfFavourite } from '../../lib/api/favourites'
+import { awardPoints } from '../../lib/api/streak'
 
 const userId = ref(null)
 const username = ref('')
@@ -243,9 +244,12 @@ async function submitReview() {
   }])
   loading.value = false
 
-  if (error) alert('Failed to submit review.')
-  else {
-    alert('Review added successfully!')
+  if (error) {
+    alert('Failed to submit review.')
+  } else {
+    // Award 7 points for submitting a review
+    await awardPoints(userId.value, 7, 'Submitted a cafe review')
+    alert('Review added successfully! You earned 7 points!')
     closeModal()
     loadReviews()
   }

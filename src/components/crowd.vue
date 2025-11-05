@@ -195,100 +195,244 @@ const submitCrowdLevel = async () => {
 
 <style scoped>
 .formContainer {
-    padding: 10px;
     display: flex;
     justify-content: center;
-    margin: 50px 400px 50px 400px;
+    align-items: center;
+    padding: 60px 20px;
+    min-height: auto;
 }
 
-
 .crowdForm {
-    border-radius: 5px;
     background-color: #fdf9ee;
     color: #6d412a;
-    padding: 90px 5px 90px 5px;
-    margin: 10px;
-    width: 70%;
+    border-radius: 12px;
+    padding: 50px 40px;
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.crowdForm h2 {
+    margin: 0 0 15px 0;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-align: left;
+    padding: 0 10px;
+}
+
+.crowdForm > div {
+    margin-bottom: 20px;
     text-align: center;
 }
 
-
 .autocomplete-container {
     position: relative;
+    text-align: left;
 }
 
+.search-bar {
+    width: 100%;
+    padding: 14px 18px;
+    font-size: 15px;
+    border: 2px solid #6d412a;
+    border-radius: 25px;
+    background-color: #fff;
+    color: #6d412a;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+}
 
-.search-input:focus {
+.search-bar:focus {
     outline: none;
     border-color: #8b5a3c;
+    background-color: #fdf9ee;
 }
 
+.search-bar::placeholder {
+    color: #a0826d;
+}
 
 .suggestions-list {
     position: absolute;
     top: 100%;
     left: 0;
     right: 0;
-    margin: 4px 0 0 0;
+    margin: 6px 0 0 0;
     padding: 0;
     list-style: none;
     background-color: #fff;
     border: 2px solid #6d412a;
-    border-radius: 4px;
-    max-height: 200px;
+    border-radius: 8px;
+    max-height: 220px;
     overflow-y: auto;
     z-index: 1000;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-
 .suggestion-item {
-    padding: 10px 12px;
+    padding: 12px 18px;
     cursor: pointer;
     color: #6d412a;
     transition: background-color 0.2s;
+    border-bottom: 1px solid #f0e6d2;
 }
 
+.suggestion-item:last-child {
+    border-bottom: none;
+}
 
 .suggestion-item:hover {
-    background-color: #fdf9ee;
+    background-color: #f9f2e4;
 }
-
 
 .crowd-icons {
     display: flex;
     justify-content: center;
-    gap: 15px;
-    margin-top: 10px;
+    gap: 25px;
+    margin-top: 15px;
+    margin-bottom: 10px;
 }
 
-
 .crowd-icon {
-    font-size: 40px;
+    font-size: 50px;
     cursor: pointer;
     transition: all 0.2s ease;
     opacity: 0.3;
     filter: grayscale(100%);
+    user-select: none;
 }
 
+.crowd-icon:hover {
+    transform: scale(1.15);
+    opacity: 0.6;
+}
 
 .crowd-icon.filled {
     opacity: 1;
     filter: grayscale(0%);
-    transform: scale(1.1);
-}
-
-
-.crowd-icon:hover {
     transform: scale(1.2);
-    opacity: 0.7;
 }
 
-
-.submitButton {
+.commentsBox {
+    width: 100%;
+    padding: 14px 18px;
+    font-size: 15px;
+    border: 2px solid #6d412a;
+    border-radius: 8px;
+    background-color: #fff;
     color: #6d412a;
-    background-color: #e7bf8f;
+    box-sizing: border-box;
+    font-family: inherit;
+    transition: all 0.2s ease;
+}
+
+.commentsBox:focus {
+    outline: none;
+    border-color: #8b5a3c;
+    background-color: #fdf9ee;
+}
+
+.commentsBox::placeholder {
+    color: #a0826d;
+}
+
+.submit-button {
+    width: 100%;
+    padding: 16px 32px;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: #fff;
+    background-color: #d4a574;
     border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.submit-button:hover:not(:disabled) {
+    background-color: #c9985a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(212, 165, 116, 0.3);
+}
+
+.submit-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .crowdForm {
+        padding: 40px 25px;
+        max-width: 100%;
+        border-radius: 8px;
+    }
+
+    .crowdForm h2 {
+        font-size: 14px;
+    }
+
+    .search-bar,
+    .commentsBox {
+        padding: 12px 16px;
+        font-size: 14px;
+    }
+
+    .crowd-icons {
+        gap: 20px;
+    }
+
+    .crowd-icon {
+        font-size: 45px;
+    }
+
+    .submit-button {
+        padding: 14px 24px;
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .formContainer {
+        padding: 20px 15px;
+    }
+
+    .crowdForm {
+        padding: 30px 20px;
+    }
+
+    .crowdForm h2 {
+        font-size: 13px;
+    }
+
+    .crowdForm > div {
+        margin-bottom: 15px;
+    }
+
+    .search-bar,
+    .commentsBox {
+        padding: 11px 14px;
+        font-size: 13px;
+        border-radius: 6px;
+    }
+
+    .crowd-icons {
+        gap: 15px;
+        margin-top: 12px;
+    }
+
+    .crowd-icon {
+        font-size: 40px;
+    }
+
+    .submit-button {
+        padding: 12px 20px;
+        font-size: 14px;
+    }
 }
 
 
