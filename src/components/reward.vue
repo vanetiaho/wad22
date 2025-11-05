@@ -98,7 +98,7 @@ onMounted(async () => {
 
 <template>
     <div class="rewardsContainer">
-        <h1 class="tasksTitle">My Rewards</h1>
+        <h1 class="tasksTitle">MY REWARDS</h1>
 
         <div class="toggleContainer">
             <div class="toggleSlider" :class="{ 'slideRight': activeTab === 'expired' }"></div>
@@ -168,8 +168,9 @@ onMounted(async () => {
 
 <style scoped>
 .rewardsContainer {
-    padding: 20px;
-    max-width: 800px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    max-width: 900px;
     margin: 0 auto;
 }
 
@@ -178,6 +179,7 @@ onMounted(async () => {
     display: flex;
     justify-content: center;
     gap: 0;
+    margin-top: 20px;
     margin-bottom: 30px;
     border: 2px solid #6d412a;
     border-radius: 8px;
@@ -232,7 +234,7 @@ onMounted(async () => {
     background-color: #fdf9ee;
     border-radius: 8px;
     padding: 20px;
-    min-height: 300px;
+    min-height: 500px;
 }
 
 .loading {

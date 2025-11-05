@@ -248,9 +248,12 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .studyPlannerContainer {
-  padding: 20px;
   max-width: 900px;
   margin: 0 auto;
+}
+
+.tasksHeading {
+  margin-bottom: 30px;
 }
 
 .cameraContainer {
