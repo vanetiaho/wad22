@@ -65,6 +65,12 @@
         <h2>My Rewards</h2>
         <p>View your points balance</p>
       </router-link>
+
+      <router-link to="/calendar" class="section-card">
+        <div class="card-icon">📷</div>
+        <h2>Study Streak</h2>
+        <p>View your study streak pictures</p>
+      </router-link>      
     </div>
   </div>
 </template>

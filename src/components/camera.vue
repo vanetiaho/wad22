@@ -2,6 +2,7 @@
 <script setup>
 import { ref, onBeforeUnmount } from 'vue';
 import supabase from '../config/supabaseClient';
+import { checkAndAwardStreakPoints } from '../../lib/api/streak';
 
 const videoRef = ref(null);
 const canvasRef = ref(null);
@@ -123,7 +124,7 @@ const uploadPhoto = async () => {
     const fileName = `${user.id}/${Date.now()}.png`;
 
     // Upload to storage
-    const { data, error: uploadError } = await supabase.storage
+    const { error: uploadError } = await supabase.storage
       .from('photos')
       .upload(fileName, blob, {
         contentType: 'image/png',
@@ -137,21 +138,19 @@ const uploadPhoto = async () => {
     }
 
     // Get public URL
-    const { data: { publicUrl } } = supabase.storage
+    supabase.storage
       .from('photos')
       .getPublicUrl(fileName);
 
-    // Save reference to database (optional - if you have a photos table)
-    // const { error: dbError } = await supabase
-    //   .from('photos')
-    //   .insert([{
-    //     user_id: user.id,
-    //     storage_path: fileName,
-    //     public_url: publicUrl,
-    //     created_at: new Date().toISOString()
-    //   }]);
+    // Check streak and award points if milestone reached
+    const streakResult = await checkAndAwardStreakPoints(user.id);
 
-    uploadSuccess.value = 'Photo uploaded successfully!';
+    let successMessage = 'Photo uploaded successfully!';
+    if (streakResult.milestone) {
+      successMessage += ` 🎉 Streak milestone: ${streakResult.streak} days! Earned 5 points!`;
+    }
+
+    uploadSuccess.value = successMessage;
     isUploading.value = false;
 
     // Reset after 2 seconds

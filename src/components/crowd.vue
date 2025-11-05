@@ -120,6 +120,7 @@ const submitCrowdLevel = async () => {
                     @focus="showSuggestions = true"
                     placeholder="Search cafe..."
                     class="search-bar"
+                    type="text"
                 /> 
                 <ul v-if="showSuggestions && filteredCafes.length" class="suggestions-list">
                     <li
@@ -146,12 +147,11 @@ const submitCrowdLevel = async () => {
                 </div>
             </div>
             <div>
-                <input
+                <textarea
                     v-model="comments"
                     class="commentsBox"
-                    type="text"
                     placeholder="Comments"
-                />
+                ></textarea>
             </div>
             <div>
                 <button
@@ -159,7 +159,7 @@ const submitCrowdLevel = async () => {
                     :disabled="isSubmitting"
                     class="submit-button"
                 >
-                    {{ isSubmitting ? 'Submitting...' : 'Submit' }}
+                    {{ isSubmitting ? 'Submitting...' : 'SUBMIT' }}
                 </button>
             </div>
         </div>
@@ -171,26 +171,75 @@ const submitCrowdLevel = async () => {
     padding: 10px;
     display: flex;
     justify-content: center;
-    margin: 50px 400px 50px 400px;
+    margin: 50px 20px;
+}
+
+@media (min-width: 768px) {
+    .formContainer {
+        margin: 50px 100px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .formContainer {
+        margin: 50px 400px;
+    }
 }
 
 .crowdForm {
     border-radius: 5px;
     background-color: #fdf9ee;
     color: #6d412a;
-    padding: 90px 5px 90px 5px;
+    padding: 40px 15px;
     margin: 10px;
-    width: 70%;
+    width: 100%;
+    max-width: 600px;
     text-align: center;
+}
+
+@media (min-width: 768px) {
+    .crowdForm {
+        padding: 60px 20px;
+        width: 90%;
+    }
+}
+
+@media (min-width: 1024px) {
+    .crowdForm {
+        padding: 90px 5px;
+        width: 70%;
+    }
 }
 
 .autocomplete-container {
     position: relative;
 }
 
-.search-input:focus {
+.search-bar {
+    width: 90%;
+    padding: 12px 16px;
+    font-size: 16px;
+    border: 2px solid #6d412a;
+    border-radius: 25px;
+    background-color: #fdf9ee;
+    color: #6d412a;
+    box-sizing: border-box;
+    margin: 10px 0;
+}
+
+@media (min-width: 768px) {
+    .search-bar {
+        width: 75%;
+    }
+}
+
+.search-bar:focus {
     outline: none;
     border-color: #8b5a3c;
+}
+
+.search-bar::placeholder {
+    color: #a0826d;
 }
 
 .suggestions-list {
@@ -245,6 +294,68 @@ const submitCrowdLevel = async () => {
 .crowd-icon:hover {
     transform: scale(1.2);
     opacity: 0.7;
+}
+
+.commentsBox {
+    width: 90%;
+    padding: 12px 16px;
+    font-size: 16px;
+    border: 2px solid #6d412a;
+    border-radius: 8px;
+    background-color: #fff;
+    color: #6d412a;
+    box-sizing: border-box;
+    margin: 15px 0;
+    min-height: 100px;
+    resize: none;
+    font-family: inherit;
+}
+
+@media (min-width: 768px) {
+    .commentsBox {
+        width: 75%;
+    }
+}
+
+.commentsBox:focus {
+    outline: none;
+    border-color: #8b5a3c;
+}
+
+.commentsBox::placeholder {
+    color: #a0826d;
+}
+
+.submit-button {
+    width: 90%;
+    padding: 14px 28px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #6d412a;
+    background-color: #d4a574;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 15px;
+    box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+    .submit-button {
+        width: 75%;
+        padding: 16px 32px;
+        font-size: 18px;
+    }
+}
+
+.submit-button:hover:not(:disabled) {
+    background-color: #c9985a;
+}
+
+.submit-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 .submitButton {

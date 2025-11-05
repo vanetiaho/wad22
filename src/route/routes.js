@@ -17,6 +17,7 @@ import camera from "@/components/camera.vue";
 import login_view from "../components/login_view.vue";
 import my_reviews from "../components/my_reviews.vue";
 import favourites from "../components/favourites.vue"; // add in user icon hover
+import calendar from "@/components/calendar.vue";
 
 const history = createWebHistory()
 const routes = [
@@ -110,6 +111,13 @@ const routes = [
 		name: "camera",
 		component: camera,
 		meta: { requiresAuth: true, title: "Camera"}
+	},
+
+	{
+		path: "/calendar",
+		name: "calendar",
+		component: calendar,
+		meta: { requiresAuth: true, title: "Calendar"}
 	},
 ];
 

@@ -32,15 +32,19 @@
 }
 
 .card {
-    flex: 1 1 300px; 
+    flex: 1 1 300px;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     transition: 0.3s;
     border-radius: 5px;
     background-color: #fdf9ee;
     color: #6d412a;
-    padding: 60px 20px; 
+    padding: 200px 20px;
     text-align: center;
-    min-width: 250px;  
+    min-width: 250px;
+    min-height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .card:hover {

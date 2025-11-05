@@ -18,6 +18,9 @@
     "@fortawesome/vue-fontawesome": "^3.1.2",
     "@supabase/supabase-js": "^2.76.1",
     "groq-sdk": "^0.34.0",
+    "jszip": "^3.10.1",
+    "mammoth": "^1.11.0",
+    "pdfjs-dist": "^5.4.394",
     "vue": "^3.5.22",
     "vue-router": "^4.6.3"
   },
