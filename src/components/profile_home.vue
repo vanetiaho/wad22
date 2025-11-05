@@ -6,27 +6,45 @@
     </div>
 
     <div class="quick-stats">
-      <div class="stat-card">
-        <div class="stat-icon">⭐</div>
+      <router-link to="/reviews" class="stat-card">
+        <div class="stat-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="#FFD700" viewBox="0 0 24 24">
+            <path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.777 1.4 8.17L12 18.896l-7.334 3.861 1.4-8.17L.132 9.21l8.2-1.192z"/>
+          </svg>
+        </div>
         <div class="stat-info">
           <h3>{{ reviewCount }}</h3>
           <p>Reviews</p>
         </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">❤️</div>
+      </router-link>
+
+      <router-link to="/favourites" class="stat-card">
+        <div class="stat-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="red" viewBox="0 0 24 24">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+        </div>
         <div class="stat-info">
           <h3>{{ favouriteCount }}</h3>
           <p>Favourites</p>
         </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">🏆</div>
+      </router-link>
+      
+      <router-link to="/reward" class="stat-card">
+        <div class="stat-icon">
+          <svg viewBox="0 0 36 36" width="40" height="40" xmlns="http://www.w3.org/2000/svg">
+  <path fill="#FFAC33" d="M5.123 5h6c1.104 0 1.877-.896 1.877-2V4c0-1.104-.773-2-1.877-2h-8c-2 0-3.583 2.125-3 5 0 0 1.791 9.375 1.917 9.958C2.373 18.5 4.164 20 6.081 20h6.958c1.105 0-.039-1.896-.039-3v-2c0 1.104-.773 2-1.877 2h-4c-1.104 0-1.833-1.042-2-2S3.539 7.667 3.539 7.667C3.206 5.75 4.018 5 5.123 5zm25.812 0h-6c-1.105 0-2 .896-2 2V4c0-1.104 1.831-2 2.935-2h8c2 0 3.584 2.125 3 5 0 0-1.633 9.419-1.771 10-.354 1.5-2.042 3-4 3h-7.146C21.914 20 22 18.104 22 17v-2c0 1.104 1.831 2 2.935 2h4c1.104 0 1.834-1.042 2-2s1.584-7.333 1.584-7.333C32.851 5.75 32.04 5 30.935 5zM20.832 22c0-6.958-2.709 0-2.709 0s-3-6.958-3 0-3.291 10-3.291 10h12.292c0 0-3.292-3.042-3.292-10z"/>
+  <path fill="#FFCC4D" d="M29.123 6.577c0 6.775-6.77 18.192-11 18.192s-11-11.417-11-18.192c0-5.195 1-6.319 3-6.319s6.025-.027 8-.027l7-.001c2.917 0 4 .684 4 6.347z"/>
+  <path fill="#C1694F" d="M27 33c0 1.104.227 2-.877 2h-16C9.018 35 9 34.104 9 33v-1c0-1.104 1.164-2 2.206-2h13.917c1.042 0 1.877.896 1.877 2v1z"/>
+  <path fill="#C1694F" d="M29 34.625c0 .76.165 1.375-1.252 1.375H8.498C7.206 36 7 35.385 7 34.625v-.25C7 33.615 7.738 33 8.498 33h19.25c.759 0 1.252.615 1.252 1.375v.25z"/>
+</svg>
+
+        </div>
         <div class="stat-info">
           <h3>{{ totalPoints }}</h3>
           <p>Points</p>
         </div>
-      </div>
+      </router-link>
     </div>
 
     <div class="sections-grid">
@@ -34,18 +52,6 @@
         <div class="card-icon"><svg width="50" height="50" viewBox="0 0 47.5 47.5" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"><defs><clipPath clipPathUnits="userSpaceOnUse" id="a"><path d="M0 38h38V0H0z"/></clipPath><clipPath clipPathUnits="userSpaceOnUse" id="b"><path d="M0 38h38V0H0z"/></clipPath></defs><g clip-path="url(#a)" transform="matrix(1.25 0 0 -1.25 0 47.5)"><path d="M0 0c0-5.522-8.059-10-18-10S-36-5.522-36 0s8.059 10 18 10S0 5.522 0 0" style="fill:#99aab5;fill-opacity:1;fill-rule:nonzero;stroke:none" transform="translate(37 11)"/><path d="M0 0c0-5.522-8.059-10-18-10S-36-5.522-36 0s8.059 10 18 10S0 5.522 0 0" style="fill:#ccd6dd;fill-opacity:1;fill-rule:nonzero;stroke:none" transform="translate(37 13)"/><path d="M0 0c-14.958 0-17 15-17 19h34c0-2-1.958-19-17-19" style="fill:#f5f8fa;fill-opacity:1;fill-rule:nonzero;stroke:none" transform="translate(19 6)"/><path d="M0 0c-1.357.938-3.103 1.694-5.121 2.25C-3.246 2.826-.57 2.559 0 0m2.503-2.692C4.945 7.43-7.278 5.014-9.701 3.106c-1.34.149-2.736.234-4.181.234-9.389 0-17-3.228-17-8.444s7.611-9.444 17-9.444 17 4.228 17 9.444c0 .862-.225 1.664-.615 2.412" style="fill:#ccd6dd;fill-opacity:1;fill-rule:nonzero;stroke:none" transform="translate(32.882 30.048)"/></g><g clip-path="url(#b)" transform="matrix(1.25 0 0 -1.25 0 47.5)"><path d="M0 0c0-3.866-6.716-7-15-7s-15 3.134-15 7 6.716 7 15 7S0 3.866 0 0" style="fill:#8a4b38;fill-opacity:1;fill-rule:nonzero;stroke:none" transform="translate(34 24)"/><path d="M0 0a1 1 0 0 0-.707.293C-3.044 2.63-3.083 5.178-.832 8.555c.739 1.109.9 2.245.478 3.377-.461 1.235-1.438 1.996-1.731 2.076-.553 0-.958.444-.958.996 0 .553.491.996 1.043.996.997 0 2.395-1.153 3.183-2.625 1.034-1.933.91-4.039-.351-5.93C-1.129 4.503-.699 3.113.707 1.707A.999.999 0 0 0 0 0" style="fill:#d99e82;fill-opacity:1;fill-rule:nonzero;stroke:none" transform="translate(21 20)"/><path d="M0 0a1 1 0 0 0-.707.293C-3.044 2.63-3.083 5.178-.832 8.555c.727 1.091.894 2.082.494 2.947-.444.961-1.431 1.469-1.684 1.499a.99.99 0 0 0-.989.999c0 .553.459 1 1.011 1 .997 0 2.584-.974 3.36-2.423.481-.899 1.053-2.761-.528-5.132C-1.129 4.503-.699 3.113.707 1.707A.999.999 0 0 0 0 0" style="fill:#d99e82;fill-opacity:1;fill-rule:nonzero;stroke:none" transform="translate(15 22)"/></g></svg></div>
         <h2>Browse Cafes</h2>
         <p>Explore all available study spots</p>
-      </router-link>
-
-      <router-link to="/my-reviews" class="section-card">
-        <div class="card-icon"><svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><title>70 Basic icons by Xicons.co</title><path d="M33 48H4a4 4 0 0 1-4-4V20L13 9h20a4 4 0 0 1 4 4v31a4 4 0 0 1-4 4" fill="#e7e9e9"/><path d="M47.2 7.32 40.66.78a2.81 2.81 0 0 0-3.89 0l-18 18a2 2 0 0 0 0 2.8l7.62 7.63a2 2 0 0 0 1.4.58 2 2 0 0 0 1.4-.58l18-18a2.76 2.76 0 0 0 .01-3.89" fill="#f9d74a"/><path fill="#ec5044" d="m31.502 5.992 3.006-3.004 10.49 10.497-3.006 3.004z"/><path d="m29.26 26.4-7.67-7.68a2 2 0 0 0-3.35 1.06L16.6 29.1a2 2 0 0 0 2.29 2.29l9.32-1.65a2 2 0 0 0 1.05-3.34" fill="#edcabb"/><path d="m20.56 30.14-2.71-2.72a.57.57 0 0 0-.58-.14.58.58 0 0 0-.4.45l-.31 1.75a1.68 1.68 0 0 0 1.65 2h.29l1.75-.31a.58.58 0 0 0 .31-1.03" fill="#4d4d4d"/><path d="M0 20h11a2 2 0 0 0 2-2V9Z" fill="#a1a3a4"/></svg></div>
-        <h2>My Reviews</h2>
-        <p>See all your cafe reviews</p>
-      </router-link>
-
-      <router-link to="/favourites" class="section-card">
-        <div class="card-icon"><svg width="50" height="50" viewBox="0 0 1024 1024" class="icon" xmlns="http://www.w3.org/2000/svg"><path d="M725.333 42.667A276.71 276.71 0 0 0 512 142.89 276.71 276.71 0 0 0 298.667 42.667C145.749 42.667 21.333 167.083 21.333 320c0 263.083 457.664 640.576 477.163 656.512a21.23 21.23 0 0 0 27.008 0c19.499-15.936 477.163-393.43 477.163-656.512 0-152.917-124.416-277.333-277.334-277.333" fill="#e86c60"/></svg></div>
-        <h2>Favourites</h2>
-        <p>Your saved cafes</p>
       </router-link>
 
       <router-link to="/map" class="section-card">
@@ -157,6 +163,7 @@ onMounted(async () => {
   border-radius: 15px;
   padding: 25px;
   display: flex;
+  text-decoration: none;
   align-items: center;
   gap: 20px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
