@@ -1,6 +1,8 @@
 <template>
   <div class="cafe-review-page">
-    <button class="back-btn" @click="$router.back()">← Back</button>
+    <button class="back-btn" @click="$router.back()">
+      <img :src="ArrowLeft" class="icon-back" />
+      Back</button>
     <!-- Cafe Info -->
     <div class="cafe-header">
       <div class="header-content">
@@ -9,18 +11,25 @@
           <p>{{ cafe.address }}</p>
           <div class="average-rating">
             Average Rating: 
-            <span v-for="n in 5" :key="n" class="star" :class="{ filled: n <= Math.round(averageRating) }">⭐</span>
+            <span v-for="n in 5" :key="n" class="star">
+              <img 
+                :src="getStarIcon(n)" 
+                class="star-icon" 
+              />
+            </span>
             ({{ averageRating.toFixed(1) }})
           </div>
         </div>
 
-        <!-- Heart Button -->
         <button 
           @click="toggleFavourite"
           class="heart-btn-large"
           :class="{ 'is-favourite': isFavourite }"
         >
-          {{ isFavourite ? '❤️' : '🤍' }}
+          <img
+            :src="isFavourite ? HeartFilled : HeartOutline"
+            class="heart-icon"
+          />
         </button>
       </div>
     </div>
@@ -32,8 +41,12 @@
           <img :src="currentImage" :alt="cafe.cafe_name" />
         </div>
         <div class="carousel-controls">
-          <button @click="prevImage">‹</button>
-          <button @click="nextImage">›</button>
+          <button @click="prevImage">
+            <img :src="ArrowLeft" class="arrow-icon" />
+          </button>
+          <button @click="nextImage">
+            <img :src="ArrowRight" class="arrow-icon" />
+          </button>
         </div>
       </div>
 
@@ -45,7 +58,12 @@
           <div class="review-header">
             <span class="review-user">{{ review.name }}</span>
             <span class="review-rating">
-              <span v-for="n in 5" :key="n" class="star" :class="{ filled: n <= review.rating }">⭐</span>
+              <span v-for="n in 5" :key="n" class="star">
+                <img 
+                  :src="review.rating >= n ? StarFilled : StarOutline"
+                  class="star-icon"
+                />
+              </span>
             </span>
           </div>
           <p>{{ review.comment }}</p>
@@ -71,7 +89,12 @@
             @mouseover="setHover(n)"
             @mouseleave="resetHover"
             :class="{ selected: n <= (hoverRating || newReview.rating) }"
-          >⭐</span>
+          >
+            <img
+                :src="n <= (hoverRating || newReview.rating) ? StarFilled : StarOutline"
+                class="star-icon"
+              />
+          </span>
         </div>
 
         <label>Comment:</label>
@@ -80,7 +103,9 @@
         <button type="submit" :disabled="loading">{{ loading ? 'Submitting...' : 'Submit Review' }}</button>
       </form>
 
-      <button class="close-btn" @click="closeModal">✖</button>
+      <button class="close-btn" @click="closeModal">
+        <img :src="CloseIcon" class="close-icon" />
+      </button>
     </div>
   </div>
 </template>
@@ -90,6 +115,14 @@ import { ref, onMounted } from 'vue'
 import supabase from '../config/supabaseClient'
 import { useRoute } from 'vue-router'
 import { addFavourite, removeFavourite, checkIfFavourite } from '../../lib/api/favourites'
+import StarFilled from '@/components/icons/StarFilled.svg'
+import StarOutline from '@/components/icons/StarOutline.svg'
+import HeartFilled from '@/components/icons/HeartFilled.svg'
+import HeartOutline from '@/components/icons/HeartOutline.svg'
+import ArrowLeft from '@/components/icons/ArrowLeft.svg'
+import ArrowRight from '@/components/icons/ArrowRight.svg'
+import CloseIcon from '@/components/icons/Close.svg'
+
 
 const userId = ref(null)
 const username = ref('')
@@ -235,6 +268,16 @@ function resetHover() {
 function closeModal() {
   showModal.value = false
 }
+function getStarIcon(n) {
+  if (averageRating.value >= n) {
+    return StarFilled                  // full
+  } else if (averageRating.value >= n - 0.5) {
+    return StarHalf                    // ✅ add a half-star icon
+  } else {
+    return StarOutline                 // empty
+  }
+}
+
 
 async function submitReview() {
   if (!newReview.value.comment || !newReview.value.rating) {
@@ -261,6 +304,22 @@ async function submitReview() {
     console.error('Error adding review:', error)
     alert('Failed to submit review.')
   } else {
+      const { data: pointsData, error: pointsError } = await supabase
+        .from("points")
+        .insert({
+          user_id: userId.value,
+          amount: 7,
+          reason: "Review submitted",
+          earned_at: new Date(),
+          is_used: false,
+      });
+
+      if (pointsError) {
+        console.error("POINTS INSERT ERROR:", pointsError);
+      } else {
+        console.log("POINTS INSERT SUCCESS:", pointsData);
+      }
+
     alert('Review added successfully!')
     closeModal()
     loadReviews() // reload updated reviews
@@ -477,5 +536,30 @@ async function submitReview() {
 
 .heart-btn-large.is-favourite {
   background-color: rgba(255, 200, 200, 0.95);
+}
+
+.star-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.heart-icon {
+  width: 28px;
+  height: 28px;
+}
+
+.arrow-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.close-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.icon-back {
+  width: 16px;
+  height: 16px;
 }
 </style>
