@@ -174,6 +174,7 @@ onMounted(() => {
 </script>
 
 <template>
+
   <div class="calendarContainer">
     <div class="tasksHeading">
       <h1 class="tasksTitle">STUDY<br> STREAK</h1>

@@ -36,11 +36,9 @@ const handleLogout = async () => {
 <template>
   <nav class="navbar">
     <!-- Hamburger menu for mobile -->
-    <button class="hamburger" @click="menuOpen = !menuOpen">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
+  <button class="hamburger" @click="menuOpen = !menuOpen">
+    <FontAwesomeIcon :icon="['fas', 'bars']" />
+  </button>
 
     <div class="nav-left" :class="{ 'menu-open': menuOpen }">
       <div class="logo desktop-only">MAP & MUG</div>
@@ -104,17 +102,19 @@ const handleLogout = async () => {
   background: none;
   border: none;
   cursor: pointer;
-  padding: 10px;
+  padding: 5px;
   z-index: 1001;
+  color: #fbe8d3;
+  font-size: 28px;
 }
 
-.hamburger span {
+/* .hamburger span {
   width: 25px;
   height: 3px;
   background-color: #fbe8d3;
   margin: 3px 0;
   transition: 0.3s;
-}
+} */
 
 .mobile-logo {
   display: none;

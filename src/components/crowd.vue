@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import supabase from '../config/supabaseClient'
+import { awardPoints } from '../../lib/api/streak'
 // console.log(supabase);
 
 
@@ -11,6 +12,7 @@ const crowdLevel = ref(0);
 const autocompleteRef = ref(null);
 const comments = ref('');
 const isSubmitting = ref(false);
+const userId = ref(null);
 
 
 // filter cafes based on search input
@@ -31,6 +33,10 @@ const handleClickOutside = (event) => {
 
 
 onMounted(async () => {
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) userId.value = user.id
+
       const { data, error } = await supabase
         .from('cafes')
         .select('id , cafe_name')
@@ -86,7 +92,7 @@ const submitCrowdLevel = async () => {
 
   try {
     // insert into supabase
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('crowd')
       .insert([
         {
@@ -101,7 +107,9 @@ const submitCrowdLevel = async () => {
       console.error('Error submitting data:', error);
       alert(`Failed to submit crowd level: ${error.message}`);
     } else {
-      alert('Crowd level submitted successfully!');
+      // Award 5 points for submitting a crowd level update
+      await awardPoints(userId.value, 5, 'Submitted a crowd level update')
+      alert('Crowd level submitted successfully! You earned 5 points!');
       // reset form
       selectedCafe.value = '';
       crowdLevel.value = 0;
