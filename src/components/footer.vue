@@ -8,12 +8,12 @@
     <div class="footer-right">
       <ul class="footer-links">
         <li><RouterLink to="/">HOME</RouterLink></li>
+        <li><RouterLink to="/map">MAP</RouterLink></li>
         <li><RouterLink to="/reviews">COMMUNITY</RouterLink></li>
-        <li><RouterLink to="/my-reviews">MY REVIEWS</RouterLink></li>
-        <li><RouterLink to="/favourites">FAVOURITES</RouterLink></li>
         <li><RouterLink to="/tasks">TASKS</RouterLink></li>
         <li><RouterLink to="/reward">REWARDS</RouterLink></li>
-        <li><RouterLink to="/map">MAP</RouterLink></li>
+        <li><RouterLink to="/camera">STUDY STREAKS⚡</RouterLink></li>
+        
         <li><p>&copy; 2025 Map & Mug. All rights reserved.</p></li>
       </ul>
       

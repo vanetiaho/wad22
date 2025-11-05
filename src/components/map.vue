@@ -167,8 +167,10 @@ function clearCafeMarkers() {
 
 async function searchNearbyStudySpots() {
 	if (!Place || !map) return;
-	clearCafeMarkers();
-	allPlaces = [];
+	// Only clear if we don't have markers yet
+	if (cafeMarkers.length === 0) {
+		allPlaces = [];
+	}
 
 	const center = map.getCenter();
 	if (!center) return;
@@ -228,23 +230,34 @@ async function searchNearbyStudySpots() {
 		}
 	}
 
-	updateVisibleMarkers();
+	// Create all markers initially
+	if (cafeMarkers.length === 0) {
+		allPlaces.forEach((place) => createStudyMarker(place));
+	}
 }
 
 function updateVisibleMarkers() {
-	clearCafeMarkers();
-
-	const filtered = allPlaces.filter((place) => {
-		if (filters.value.searchQuery) {
-			const query = filters.value.searchQuery.toLowerCase();
-			const name = (place.name || "").toLowerCase();
-			const address = (place.formatted_address || "").toLowerCase();
-			if (!name.includes(query) && !address.includes(query)) return false;
-		}
-		return true;
+	// Don't clear markers - just hide/show them based on search
+	const query = filters.value.searchQuery.toLowerCase();
+	
+	cafeMarkers.forEach(({ marker, place }) => {
+		const name = (place.name || "").toLowerCase();
+		const address = (place.formatted_address || "").toLowerCase();
+		const matches = !query || name.includes(query) || address.includes(query);
+		
+		// Show or hide marker
+		marker.map = matches ? map : null;
 	});
-
-	filtered.forEach((place) => createStudyMarker(place));
+	
+	// If there's a search query, center map on first visible result
+	if (query) {
+		const visibleMarker = cafeMarkers.find(({ marker }) => marker.map !== null);
+		if (visibleMarker) {
+			const pos = visibleMarker.marker.position;
+			map.setCenter({ lat: pos.lat, lng: pos.lng });
+			map.setZoom(15);
+		}
+	}
 }
 
 // FIXED: Properly extract lat/lng from AdvancedMarkerElement position
@@ -440,12 +453,6 @@ defineExpose({ filters, clearDirections });
 				@click="travelMode = 'DRIVING'"
 			>
 				🚗 Driving
-			</button>
-			<button
-				:class="{ active: travelMode === 'TRANSIT' }"
-				@click="travelMode = 'TRANSIT'"
-			>
-				🚇 Transit
 			</button>
 			<button
 				:class="{ active: travelMode === 'BICYCLING' }"
