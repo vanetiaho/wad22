@@ -4,6 +4,7 @@ This web application helps students and remote workers find the best cafés and 
 
 
 ## How to run
+(vercel deployment)
 git clone https://github.com/vanetiaho/wad22.git
 
 
