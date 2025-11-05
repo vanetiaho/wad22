@@ -3,6 +3,7 @@ import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import supabase from '../config/supabaseClient'
 // console.log(supabase);
 
+
 const cafes = ref([]);
 const selectedCafe = ref('');
 const showSuggestions = ref(false);
@@ -10,6 +11,7 @@ const crowdLevel = ref(0);
 const autocompleteRef = ref(null);
 const comments = ref('');
 const isSubmitting = ref(false);
+
 
 // filter cafes based on search input
 const filteredCafes = computed(() => {
@@ -19,6 +21,7 @@ const filteredCafes = computed(() => {
   );
 });
 
+
 // close when clicking outside
 const handleClickOutside = (event) => {
   if (autocompleteRef.value && !autocompleteRef.value.contains(event.target)) {
@@ -26,10 +29,12 @@ const handleClickOutside = (event) => {
   }
 };
 
+
 onMounted(async () => {
       const { data, error } = await supabase
         .from('cafes')
         .select('id , cafe_name')
+
 
       if (error) {
         console.error('Error fetching data:', error);
@@ -37,13 +42,16 @@ onMounted(async () => {
         cafes.value = data;
       }
 
+
       // Add click listener to close dropdown when clicking outside
       document.addEventListener('click', handleClickOutside);
     });
 
+
 onBeforeUnmount(() => {
   document.removeEventListener('click', handleClickOutside);
 });
+
 
 // data for supabase
 const selectCafe = (cafeName) => {
@@ -51,11 +59,14 @@ const selectCafe = (cafeName) => {
   showSuggestions.value = false;
 };
 
+
 const setCrowdLevel = (level) => {
   crowdLevel.value = level;
 };
 
+
 // insert into supabase
+
 
 // Submit crowd level data to Supabase
 const submitCrowdLevel = async () => {
@@ -69,7 +80,9 @@ const submitCrowdLevel = async () => {
     return;
   }
 
+
   isSubmitting.value = true;
+
 
   try {
     // insert into supabase
@@ -82,6 +95,7 @@ const submitCrowdLevel = async () => {
           comments: comments.value || null
         }
       ]);
+
 
     if (error) {
       console.error('Error submitting data:', error);
@@ -104,7 +118,10 @@ const submitCrowdLevel = async () => {
  
 
 
+
+
 </script>
+
 
 <template>
     <div class="tasksHeading">
@@ -115,13 +132,13 @@ const submitCrowdLevel = async () => {
             <div class="autocomplete-container" ref="autocompleteRef">
                 <h2>CAFE NAME:</h2>
 
+
                 <input
                     v-model="selectedCafe"
                     @focus="showSuggestions = true"
                     placeholder="Search cafe..."
                     class="search-bar"
-                    type="text"
-                /> 
+                />
                 <ul v-if="showSuggestions && filteredCafes.length" class="suggestions-list">
                     <li
                         v-for="cafe in filteredCafes"
@@ -147,11 +164,12 @@ const submitCrowdLevel = async () => {
                 </div>
             </div>
             <div>
-                <textarea
+                <input
                     v-model="comments"
                     class="commentsBox"
+                    type="text"
                     placeholder="Comments"
-                ></textarea>
+                />
             </div>
             <div>
                 <button
@@ -159,88 +177,44 @@ const submitCrowdLevel = async () => {
                     :disabled="isSubmitting"
                     class="submit-button"
                 >
-                    {{ isSubmitting ? 'Submitting...' : 'SUBMIT' }}
+                    {{ isSubmitting ? 'Submitting...' : 'Submit' }}
                 </button>
             </div>
         </div>
     </div>
 </template>
 
+
 <style scoped>
 .formContainer {
     padding: 10px;
     display: flex;
     justify-content: center;
-    margin: 50px 20px;
+    margin: 50px 400px 50px 400px;
 }
 
-@media (min-width: 768px) {
-    .formContainer {
-        margin: 50px 100px;
-    }
-}
-
-@media (min-width: 1024px) {
-    .formContainer {
-        margin: 50px 400px;
-    }
-}
 
 .crowdForm {
     border-radius: 5px;
     background-color: #fdf9ee;
     color: #6d412a;
-    padding: 40px 15px;
+    padding: 90px 5px 90px 5px;
     margin: 10px;
-    width: 100%;
-    max-width: 600px;
+    width: 70%;
     text-align: center;
 }
 
-@media (min-width: 768px) {
-    .crowdForm {
-        padding: 60px 20px;
-        width: 90%;
-    }
-}
-
-@media (min-width: 1024px) {
-    .crowdForm {
-        padding: 90px 5px;
-        width: 70%;
-    }
-}
 
 .autocomplete-container {
     position: relative;
 }
 
-.search-bar {
-    width: 90%;
-    padding: 12px 16px;
-    font-size: 16px;
-    border: 2px solid #6d412a;
-    border-radius: 25px;
-    background-color: #fdf9ee;
-    color: #6d412a;
-    box-sizing: border-box;
-    margin: 10px 0;
-}
 
-@media (min-width: 768px) {
-    .search-bar {
-        width: 75%;
-    }
-}
-
-.search-bar:focus {
+.search-input:focus {
     outline: none;
     border-color: #8b5a3c;
 }
 
-.search-bar::placeholder {
-    color: #a0826d;
-}
 
 .suggestions-list {
     position: absolute;
@@ -259,6 +233,7 @@ const submitCrowdLevel = async () => {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+
 .suggestion-item {
     padding: 10px 12px;
     cursor: pointer;
@@ -266,9 +241,11 @@ const submitCrowdLevel = async () => {
     transition: background-color 0.2s;
 }
 
+
 .suggestion-item:hover {
     background-color: #fdf9ee;
 }
+
 
 .crowd-icons {
     display: flex;
@@ -276,6 +253,7 @@ const submitCrowdLevel = async () => {
     gap: 15px;
     margin-top: 10px;
 }
+
 
 .crowd-icon {
     font-size: 40px;
@@ -285,78 +263,19 @@ const submitCrowdLevel = async () => {
     filter: grayscale(100%);
 }
 
+
 .crowd-icon.filled {
     opacity: 1;
     filter: grayscale(0%);
     transform: scale(1.1);
 }
 
+
 .crowd-icon:hover {
     transform: scale(1.2);
     opacity: 0.7;
 }
 
-.commentsBox {
-    width: 90%;
-    padding: 12px 16px;
-    font-size: 16px;
-    border: 2px solid #6d412a;
-    border-radius: 8px;
-    background-color: #fff;
-    color: #6d412a;
-    box-sizing: border-box;
-    margin: 15px 0;
-    min-height: 100px;
-    resize: none;
-    font-family: inherit;
-}
-
-@media (min-width: 768px) {
-    .commentsBox {
-        width: 75%;
-    }
-}
-
-.commentsBox:focus {
-    outline: none;
-    border-color: #8b5a3c;
-}
-
-.commentsBox::placeholder {
-    color: #a0826d;
-}
-
-.submit-button {
-    width: 90%;
-    padding: 14px 28px;
-    font-size: 16px;
-    font-weight: bold;
-    color: #6d412a;
-    background-color: #d4a574;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    margin-top: 15px;
-    box-sizing: border-box;
-}
-
-@media (min-width: 768px) {
-    .submit-button {
-        width: 75%;
-        padding: 16px 32px;
-        font-size: 18px;
-    }
-}
-
-.submit-button:hover:not(:disabled) {
-    background-color: #c9985a;
-}
-
-.submit-button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
 
 .submitButton {
     color: #6d412a;
@@ -364,4 +283,8 @@ const submitCrowdLevel = async () => {
     border: none;
 }
 
+
 </style>
+
+
+
