@@ -1,6 +1,7 @@
 <template>
   <div class="reviews-section">
     <h1>REVIEWS</h1>
+
     <div class="search-bar-container">
       <input
         type="text"
@@ -13,7 +14,7 @@
 
     <div class="reviews-grid">
       <div
-        v-for="cafe in cafes"
+        v-for="cafe in filteredCafes"
         :key="cafe.id"
         class="review-card"
       >
@@ -22,15 +23,23 @@
           class="card-link"
         >
           <img
-            :src="(Array.isArray(cafe.image_url) ? cafe.image_url[0] : cafe.image_url) || placeholderImage"
+            :src="getCafeImage(cafe)"
             :alt="cafe.cafe_name"
           />
+
           <h3>{{ cafe.cafe_name }}</h3>
           <p>{{ cafe.address }}</p>
           <p>
             Ratings:
             <span v-if="cafe.averageRating">
-              <span v-for="n in 5" :key="n" class="star" :class="{ filled: n <= Math.round(cafe.averageRating) }">⭐</span>
+              <span v-for="n in 5" :key="n" class="star">
+                <svg v-if="n <= Math.round(cafe.averageRating)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#FFD700" viewBox="0 0 24 24">
+                  <path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.777 1.4 8.17L12 18.896l-7.334 3.861 1.4-8.17L.132 9.21l8.2-1.192z"/>
+                </svg>
+                <svg v-else xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="#FFD700" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.777 1.4 8.17L12 18.896l-7.334 3.861 1.4-8.17L.132 9.21l8.2-1.192z"/>
+                </svg>
+              </span>
               ({{ cafe.averageRating.toFixed(1) }})
             </span>
             <span v-else>—</span>
@@ -43,7 +52,20 @@
           class="heart-btn"
           :class="{ 'is-favourite': favouriteIds.has(cafe.id) }"
         >
-          {{ favouriteIds.has(cafe.id) ? '❤️' : '🤍' }}
+          <svg
+            @click.stop="toggleFavourite(cafe.id)"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+              :fill="favouriteIds.has(cafe.id) ? 'red' : 'none'"
+              stroke="red"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              style="cursor: pointer; position: absolute; top: 20px; right: 20px;"
+            >
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+
         </button>
       </div>
     </div>
@@ -54,11 +76,11 @@
 import { ref, onMounted, watch } from 'vue'
 import supabase from '../config/supabaseClient'
 import { addFavourite, removeFavourite, getFavouriteCafes } from '../../lib/api/favourites'
+
 const searchQuery = ref('')
 const cafes = ref([])
 const favouriteIds = ref(new Set())
-const placeholderImage = 'https://via.placeholder.com/200'
-
+const placeholderImage = 'https://picsum.photos/400/300?random=1'
 const filteredCafes = ref([])
 
 function filterCafes() {
@@ -70,15 +92,22 @@ function filterCafes() {
 }
 
 async function loadCafes() {
-  const { data, error } = await supabase.from('cafes').select('*')
-  if (error) {
-    console.error('❌ Error fetching cafes:', error)
-  } else {
-    cafes.value = data.sort((a, b) => {
-      const aHasImage = Array.isArray(a.image_url) ? a.image_url.length > 0 : !!a.image_url
-      const bHasImage = Array.isArray(b.image_url) ? b.image_url.length > 0 : !!b.image_url
-      return bHasImage - aHasImage
+  const { data: cafeData, error: cafeError } = await supabase.from('cafes').select('*')
+  if (cafeError) console.error('Error fetching cafes:', cafeError)
+  else {
+    // Fetch reviews for all cafes
+    const { data: reviews, error: reviewError } = await supabase.from('reviews').select('cafe_id, rating')
+    if (reviewError) console.error('Error fetching reviews:', reviewError)
+    // Compute average rating
+    cafeData.forEach(cafe => {
+      const cafeReviews = reviews.filter(r => r.cafe_id === cafe.id)
+      cafe.averageRating = cafeReviews.length > 0
+        ? cafeReviews.reduce((sum, r) => sum + r.rating, 0) / cafeReviews.length
+        : null
     })
+
+    cafes.value = cafeData
+    filteredCafes.value = cafeData
   }
 }
 
@@ -94,11 +123,9 @@ async function loadFavourites() {
 async function toggleFavourite(cafeId) {
   try {
     if (favouriteIds.value.has(cafeId)) {
-      // Remove from favourites
       await removeFavourite(cafeId)
       favouriteIds.value.delete(cafeId)
     } else {
-      // Add to favourites
       await addFavourite(cafeId)
       favouriteIds.value.add(cafeId)
     }
@@ -108,17 +135,28 @@ async function toggleFavourite(cafeId) {
   }
 }
 
+function getCafeImage(cafe) {
+  if (Array.isArray(cafe.image_url) && cafe.image_url.length > 0) {
+    return cafe.image_url[0]  // use first image
+  } else if (typeof cafe.image_url === 'string' && cafe.image_url) {
+    return cafe.image_url
+  } else {
+    return placeholderImage   // fallback
+  }
+}
+
+
 onMounted(() => {
   loadCafes()
   loadFavourites()
 })
-// Update filteredCafes whenever cafes load
-watch(cafes, () => {
-  filteredCafes.value = cafes.value
-})
 </script>
 
 <style scoped>
+.card-link {
+  text-decoration: none !important;
+  color: inherit !important;
+}
 .reviews-section {
   padding: 60px 80px;
   text-align: left;
@@ -176,26 +214,6 @@ watch(cafes, () => {
 
 .star.filled {
   opacity: 1;
-}
-
-/* Heart Button */
-.heart-btn {
-  position: absolute;
-  top: 30px;
-  right: 30px;
-  background-color: rgba(255, 255, 255, 0.9);
-  border: none;
-  border-radius: 50%;
-  width: 45px;
-  height: 45px;
-  font-size: 24px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  z-index: 10;
 }
 
 .heart-btn:hover {
