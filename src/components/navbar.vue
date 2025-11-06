@@ -48,7 +48,7 @@ const handleLogout = async () => {
         <li @click="menuOpen = false"><RouterLink to="/reviews">COMMUNITY</RouterLink></li>
         <li @click="menuOpen = false"><RouterLink to="/tasks">TASKS</RouterLink></li>
         <li @click="menuOpen = false"><RouterLink to="/reward">REWARDS</RouterLink></li>
-        <li @click="menuOpen = false"><RouterLink to="/camera">STUDY STREAKS⚡</RouterLink></li>
+        <li @click="menuOpen = false"><RouterLink to="/camera">STUDY STREAKS</RouterLink></li>
         
       </ul>
     </div>

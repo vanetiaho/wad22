@@ -3,7 +3,7 @@
 
 <template>
     <div class="tasksHeading">
-        <h1 class="tasksTitle">CHOOSE A TASK TO<br>EARN REWARDS</h1>
+        <h1 class="pageTitle">CHOOSE A TASK TO<br>EARN REWARDS</h1>
     </div>
     <div class="cardContainer">
         <div class="card">
@@ -23,11 +23,11 @@
 <style scoped>
 .cardContainer {
     display: flex;
-    flex-wrap: wrap;       /* allows cards to move to next line if needed */
+    flex-wrap: wrap;
     justify-content: center;
-    gap: 20px;             /* space between cards */
-    padding: 20px;         /* padding around container */
-    margin: 50px auto;     /* center container horizontally */
+    gap: 20px;             
+    padding: 20px;         
+    margin: 50px auto;    
     max-width: 1200px; 
 }
 

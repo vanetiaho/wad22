@@ -175,7 +175,7 @@ onBeforeUnmount(() => {
 <template>
   <div class="studyPlannerContainer">
     <div class="tasksHeading">
-      <h1 class="tasksTitle">PIC OF <br> THE DAY</h1>
+      <h1 class="pageTitle">Study Streaks</h1>
     </div>
 
     <div class="cameraContainer">
@@ -265,6 +265,7 @@ onBeforeUnmount(() => {
   background-color: #fdf9ee;
   border-radius: 8px;
   padding: 30px;
+  margin-bottom: 50px;
   min-height: 500px;
   display: flex;
   flex-direction: column;
