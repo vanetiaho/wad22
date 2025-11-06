@@ -162,8 +162,8 @@ async function startQuiz(retryCount = 0) {
     // Award points if passed (>= 50%)
     if (passed && userId.value) {
       try {
-        await awardPoints(userId.value, 5, 'Passed quiz');
-        resultMessage += '\n\n🎉 You passed! You earned 5 points!';
+        await awardPoints(userId.value, 1, 'Passed quiz');
+        resultMessage += '\n\n🎉 You passed! You earned 1 point!';
       } catch (err) {
         console.error('Error awarding points:', err);
       }

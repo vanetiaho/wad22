@@ -206,7 +206,7 @@ async function fetchCafesFromDatabase() {
 
       // WiFi filter - if active, cafe MUST have WiFi
       if (wifiFilterActive && cafe.wifi !== true) {
-        console.log(`  ❌ Failed WiFi filter`);
+        console.log(`Failed WiFi filter`);
         return false;
       }
 
@@ -215,7 +215,7 @@ async function fetchCafesFromDatabase() {
 
       // Power Outlets filter - if active, cafe MUST have power outlets
       if (powerFilterActive && cafe.power_outlets !== true) {
-        console.log(`  ❌ Failed Power Outlets filter`);
+        console.log(`Failed Power Outlets filter`);
         return false;
       }
 
@@ -225,12 +225,12 @@ async function fetchCafesFromDatabase() {
       // Price Range filter - if active, cafe MUST be within range
       if (priceFilterActive) {
         if (cafe.price_range === null || cafe.price_range === undefined) {
-          console.log(`  ❌ Failed Price filter (no price data)`);
+          console.log(`Failed Price filter (no price data)`);
           return false;
         }
         if (cafe.price_range < filters.value.priceRange[0] ||
             cafe.price_range > filters.value.priceRange[1]) {
-          console.log(`  ❌ Failed Price filter ($${cafe.price_range} not in range $${filters.value.priceRange[0]}-$${filters.value.priceRange[1]})`);
+          console.log(`Failed Price filter ($${cafe.price_range} not in range $${filters.value.priceRange[0]}-$${filters.value.priceRange[1]})`);
           return false;
         }
       }
@@ -241,11 +241,11 @@ async function fetchCafesFromDatabase() {
       // Rating filter - if active, cafe MUST meet minimum rating
       if (ratingFilterActive) {
         if (cafe.rating === null || cafe.rating === undefined) {
-          console.log(`  ❌ Failed Rating filter (no rating data)`);
+          console.log(`Failed Rating filter (no rating data)`);
           return false;
         }
         if (cafe.rating < filters.value.rating) {
-          console.log(`  ❌ Failed Rating filter (${cafe.rating} below minimum ${filters.value.rating})`);
+          console.log(`Failed Rating filter (${cafe.rating} below minimum ${filters.value.rating})`);
           return false;
         }
       }
@@ -259,7 +259,7 @@ async function fetchCafesFromDatabase() {
         const level = crowdLevels[normalizedName];
        
         if (!level) {
-          console.log(`  ❌ Failed Crowd filter (no crowd data)`);
+          console.log(`Failed Crowd filter (no crowd data)`);
           return false;
         }
 
@@ -275,7 +275,7 @@ async function fetchCafesFromDatabase() {
 
 
         if (!matchesCrowdLevel) {
-          console.log(`  ❌ Failed Crowd filter (level ${level} not selected)`);
+          console.log(`Failed Crowd filter (level ${level} not selected)`);
           return false;
         }
       }
@@ -298,7 +298,7 @@ async function fetchCafesFromDatabase() {
         }
        
         if (!matchesOpeningDays) {
-          console.log(`  ❌ Failed Opening Days filter`);
+          console.log(`Failed Opening Days filter`);
           return false;
         }
       }
@@ -312,23 +312,23 @@ async function fetchCafesFromDatabase() {
 
         // Check if cafe matches ANY of the selected opening hours criteria
         if (filters.value.openingHours.before9am && cafe.opens_before_9am === true) {
-          console.log(`  ✅ Matches Opens before 9am filter`);
+          console.log(`Matches Opens before 9am filter`);
           matchesOpeningHours = true;
         }
 
         if (filters.value.openingHours.after10pm && cafe.closes_after_10pm === true) {
-          console.log(`  ✅ Matches Closes after 10pm filter`);
+          console.log(`Matches Closes after 10pm filter`);
           matchesOpeningHours = true;
         }
 
         if (filters.value.openingHours.open24hours && cafe.open_24_hours === true) {
-          console.log(`  ✅ Matches Open 24 hours filter`);
+          console.log(`Matches Open 24 hours filter`);
           matchesOpeningHours = true;
         }
 
         // If none of the selected criteria matched, exclude this cafe
         if (!matchesOpeningHours) {
-          console.log(`  ❌ Failed Opening Hours filter (no criteria matched)`);
+          console.log(`Failed Opening Hours filter (no criteria matched)`);
           return false;
         }
       }
@@ -336,7 +336,7 @@ async function fetchCafesFromDatabase() {
 
 
 
-      console.log(`  ✅ Passed all filters`);
+      console.log(`Passed all filters`);
       return true;
     });
 
@@ -627,10 +627,10 @@ async function updateVisibleMarkers() {
      
       // Must match search query
       if (!placeName.includes(query) && !address.includes(query)) {
-        console.log('❌ Search filter: Does not match query:', place.name);
+        console.log('Search filter: Does not match query:', place.name);
         return false;
       }
-      console.log('✅ Search filter: Matches query:', place.name);
+      console.log('Search filter: Matches query:', place.name);
     }
 
 
@@ -660,9 +660,9 @@ async function updateVisibleMarkers() {
       const matches = allowedCafeNames.has(normalizedPlaceName);
      
       if (matches) {
-        console.log('✅ Filter match:', place.name, '(normalized:', normalizedPlaceName + ')');
+        console.log('Filter match:', place.name, '(normalized:', normalizedPlaceName + ')');
       } else {
-        console.log('❌ Filter mismatch:', place.name, '(normalized:', normalizedPlaceName + ')');
+        console.log('Filter mismatch:', place.name, '(normalized:', normalizedPlaceName + ')');
       }
      
       return matches;
@@ -900,7 +900,7 @@ defineExpose({ filters, clearDirections });
 
 
 <template>
-    <h1>MAP OF CAFES</h1>
+    <h1 class="pageTitle">MAP OF CAFES</h1>
     <div id="search-bar">
         <div class="input-container">
             <FontAwesomeIcon icon="magnifying-glass" class="search-icon" />
@@ -1096,12 +1096,9 @@ defineExpose({ filters, clearDirections });
 
 
 <style scoped>
-
-h1 {
-  color: #fbe8d3;
-  margin: 60px 0;
-  text-align: center;    
-  font-weight: 700;     
+.pageTitle {
+    margin: 50px 0px 0px 0px;
+    text-align: center;    
 }
 
 .input-container {
