@@ -112,9 +112,9 @@ const submitCrowdLevel = async () => {
       successMessage.value = `Failed to submit crowd level: ${error.message}`;
       showSuccessModal.value = true;
     } else {
-      // Award 5 points for submitting a crowd level update
-      await awardPoints(userId.value, 5, 'Submitted a crowd level update')
-      successMessage.value = 'Crowd level submitted successfully! You earned 5 points!';
+      // Award 1 point for submitting a crowd level update
+      await awardPoints(userId.value, 1, 'Submitted a crowd level update')
+      successMessage.value = 'Crowd level submitted successfully! You earned 1 point!';
       showSuccessModal.value = true;
       // reset form
       selectedCafe.value = '';

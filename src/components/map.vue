@@ -900,7 +900,7 @@ defineExpose({ filters, clearDirections });
 
 
 <template>
-    <h1>MAP OF CAFES</h1>
+    <h1 class="pageTitle">MAP OF CAFES</h1>
     <div id="search-bar">
         <div class="input-container">
             <FontAwesomeIcon icon="magnifying-glass" class="search-icon" />
@@ -1096,12 +1096,9 @@ defineExpose({ filters, clearDirections });
 
 
 <style scoped>
-
-h1 {
-  color: #fbe8d3;
-  margin: 60px 0;
-  text-align: center;    
-  font-weight: 700;     
+.pageTitle {
+    margin: 50px 0px 0px 0px;
+    text-align: center;    
 }
 
 .input-container {
