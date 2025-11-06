@@ -63,6 +63,7 @@
             </svg>
           </button>
         </div>
+        <button class="add-review-btn" @click="showModal = true">Add Review</button>
       </div>
 
       <!-- Right side: Reviews -->
@@ -87,9 +88,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Floating add review button -->
-    <button class="add-review-btn" @click="showModal = true">Add Review</button>
   </div>
 
   <!-- Modal -->
@@ -270,9 +268,9 @@ async function submitReview() {
     successMessage.value = 'Failed to submit review.'
     showSuccessModal.value = true
   } else {
-    // Award 7 points for submitting a review
-    await awardPoints(userId.value, 7, 'Submitted a cafe review')
-    successMessage.value = 'Review added successfully! You earned 7 points!'
+    // Award 1 points for submitting a review
+    await awardPoints(userId.value, 1, 'Submitted a cafe review')
+    successMessage.value = 'Review added successfully! You earned 1 points!'
     showSuccessModal.value = true
     closeModal()
     loadReviews()
@@ -304,10 +302,6 @@ async function submitReview() {
 .average-rating .star {
   opacity: 0.4;
   margin-right: 2px;
-}
-
-.average-rating .star.filled {
-  opacity: 1;
 }
 
 .cafe-content {
@@ -375,20 +369,10 @@ async function submitReview() {
   font-weight: bold;
 }
 
-.review-rating .star {
-  opacity: 0.4;
-  margin-right: 2px;
-}
-
-.review-rating .star.filled {
-  opacity: 1;
-}
-
-/* Floating add review button */
 .add-review-btn {
-  position: fixed;
-  bottom: 25px;
-  right: 25px;
+  position: absolute;
+  bottom: 20px;
+  right: 10px;
   background-color: #fbe8d3;
   color: #333;
   font-size: 15px;
@@ -492,31 +476,6 @@ async function submitReview() {
   background-color: rgba(255, 200, 200, 0.95);
 }
 
-.star-icon {
-  width: 20px;
-  height: 20px;
-}
-
-.heart-icon {
-  width: 28px;
-  height: 28px;
-}
-
-.arrow-icon {
-  width: 20px;
-  height: 20px;
-}
-
-.close-icon {
-  width: 18px;
-  height: 18px;
-}
-
-.icon-back {
-  width: 16px;
-  height: 16px;
-}
-
 /* Success Modal Styles */
 .modalBackdrop {
   position: fixed;
@@ -582,5 +541,20 @@ async function submitReview() {
   background-color: #c9985a;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(212, 165, 116, 0.3);
+}
+@media (max-width: 900px) {
+  .cafe-content {
+    flex-direction: column;
+  }
+
+  .reviews-list {
+    max-height: none;
+    margin-top: 20px;
+    padding-right: 0;
+  }
+
+  .image-carousel {
+    max-width: 100%;
+  }
 }
 </style>
