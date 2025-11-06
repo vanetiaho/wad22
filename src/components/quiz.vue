@@ -472,7 +472,7 @@ function resetQuiz() {
 </script>
 
 <template>
-  <div class="studyPlannerContainer">
+  <div class="quizContainer">
     <div class="tasksHeading">
       <h1 class="pageTitle">STUDY QUIZ AI</h1>
     </div>
@@ -564,7 +564,7 @@ function resetQuiz() {
 </template>
 
 <style scoped>
-.studyPlannerContainer {
+.quizContainer {
   padding: 20px;
   max-width: 900px;
   margin: 0 auto;

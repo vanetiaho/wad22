@@ -173,7 +173,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="studyPlannerContainer">
+  <div class="quizContainer">
     <div class="tasksHeading">
       <h1 class="pageTitle">STUDY STREAKS</h1>
     </div>
@@ -258,7 +258,7 @@ h1 {
   font-weight: 700;     
 }
 
-.studyPlannerContainer {
+.quizContainer {
   max-width: 900px;
   width: 100%;
   margin: 0 auto;
