@@ -238,6 +238,13 @@ const redeemReward = async () => {
 </template>
 
 <style scoped>
+h1 {
+  color: #fbe8d3;
+  margin: 30px 0;
+  text-align: center;    
+  font-weight: 700;     
+}
+
 .rewardsContainer {
     padding-top: 50px;
     padding-bottom: 50px;

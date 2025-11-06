@@ -30,7 +30,7 @@
           </div>
         </router-link>
         <button @click="removeFavourite(favourite.cafe_id)" class="remove-btn">
-          ❤️ Remove
+          Remove
         </button>
       </div>
     </div>
@@ -73,6 +73,11 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+h1 {
+  text-align: center;    
+  font-weight: 700;     
+}
+
 .favourites-section {
   padding: 60px 80px;
 }
@@ -181,19 +186,32 @@ onMounted(async () => {
 .remove-btn {
   width: calc(100% - 40px);
   margin: 0 20px 20px 20px;
-  padding: 10px;
-  background-color: rgba(255, 100, 100, 0.2);
-  border: 2px solid #ff6464;
-  color: #ff6464;
-  border-radius: 8px;
-  cursor: pointer;
+  padding: 12px 16px;
+  background-color: rgba(122, 28, 28, 0.45); /* slightly darker */
+  border: none;
+  border-radius: 12px;
+  color: #e7bf8f;
   font-weight: bold;
-  transition: all 0.3s;
+  font-size: 16px;
+  cursor: pointer;
+  text-shadow: 1px 1px 3px rgba(80, 20, 20, 0.6); /* stronger text shadow */
+  box-shadow:
+    0 3px 8px rgba(122, 28, 28, 0.4); /* deeper shadow */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease,
+              transform 0.2s ease;
 }
 
 .remove-btn:hover {
-  background-color: rgba(255, 100, 100, 0.3);
-  transform: scale(1.02);
+  background-color: rgba(122, 28, 28, 0.6);
+  box-shadow:
+    0 5px 14px rgba(122, 28, 28, 0.55);
+  transform: translateY(-1px);
+}
+
+.remove-btn:active {
+  background-color: rgba(122, 28, 28, 0.7);
+  box-shadow: none;
+  transform: translateY(0);
 }
 
 @media (max-width: 768px) {

@@ -2,14 +2,17 @@
   <div class="reviews-section">
     <h1>REVIEWS</h1>
 
-    <div class="search-bar-container">
-      <input
-        type="text"
-        v-model="searchQuery"
-        @input="filterCafes"
-        placeholder="Search cafes..."
-        class="search-bar"
-      />
+
+    <div id="search-bar">
+      <div class="input-container">
+        <FontAwesomeIcon icon="magnifying-glass" class="search-icon" />
+        <input
+          type="text"
+          placeholder="Search Cafes..."
+          v-model="searchQuery"
+          @input="filterCafes"
+        />
+      </div>
     </div>
 
     <div class="reviews-grid">
@@ -61,7 +64,7 @@
               stroke="red"
               stroke-width="2"
               viewBox="0 0 24 24"
-              style="cursor: pointer; position: absolute; top: 20px; right: 20px;"
+              style="cursor: pointer;"
             >
             <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
           </svg>
@@ -216,30 +219,72 @@ onMounted(() => {
   opacity: 1;
 }
 
-.heart-btn:hover {
-  transform: scale(1.15);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+.heart-btn {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background: transparent;      /* no background */
+  border: none;                 /* no border */
+  padding: 0;                   /* no padding */
+  margin: 0;                    /* no margin */
+  width: 24px;                  /* same size as SVG */
+  height: 24px;
+  cursor: pointer;
+  outline: none;                /* remove focus outline if needed */
 }
 
-.heart-btn.is-favourite {
-  background-color: rgba(255, 200, 200, 0.95);
+.heart-btn svg {
+  filter: drop-shadow(0 0 3px rgba(255, 0, 0, 0.7)); /* subtle red shadow around heart */
+  transition: fill 0.3s ease;
+  display: block;
+  pointer-events: none;         /* so only button handles clicks */
 }
 
-.search-bar-container {
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  padding: 30px 0;
-  border-bottom: 30px 
+.heart-btn.is-favourite svg {
+  fill: red !important;         /* make sure heart fills red when favourited */
 }
 
-.search-bar {
+#search-bar {
+  text-align: left;
+  margin-left: 80px;
+  margin-top: 30px;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.input-container {
+  position: relative;
+  display: inline-block;
   width: 100%;
-  max-width: 400px;
-  padding: 10px 15px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 14px;
+  max-width: 500px;
 }
+
+.search-icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #6d412a;
+}
+
+#search-bar input {
+  border-radius: 30px;
+  border: 1px solid #ccc;
+  padding: 12px 15px 12px 40px; /* space for magnifying glass */
+  width: 100%;
+  background-color: #fdf9ee;
+  box-sizing: border-box;
+  font-family: "Georgia", serif;
+  font-size: 15px;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+#search-bar input:focus {
+  outline: none;
+  border-color: #a67c52;
+  box-shadow: 0 0 6px rgba(166, 124, 82, 0.4);
+}
+
 
 </style>
