@@ -1104,7 +1104,7 @@ defineExpose({ filters, clearDirections });
 
 .search-icon {
     position: absolute;
-    left: 20px;
+    left: 15px;
     top: 50%;
     transform: translateY(-50%);
     pointer-events: none;
@@ -1117,12 +1117,13 @@ defineExpose({ filters, clearDirections });
 #search-bar input {
     border-radius: 30px;
     border: 1px solid #ccc;
-    padding: 20px 20px 20px 50px;
+    padding: 12px 15px 12px 40px;
     width: 100%;
     max-width: 500px;
     background-color: #fdf9ee;
     box-sizing: border-box;
     font-family: "Georgia", serif;
+    font-size: 15px;
 }
 
 
@@ -1144,8 +1145,8 @@ defineExpose({ filters, clearDirections });
 #search-bar {
     text-align: left;
     margin-left: 80px;
-    margin-top: 40px;
-    margin-bottom: 30px;
+    margin-top: 30px;
+    margin-bottom: 20px;
     position: relative;
 }
 
@@ -1165,7 +1166,7 @@ defineExpose({ filters, clearDirections });
     background-color: #fdf9ee;
     border: 2px solid #6d412a;
     color: #6d412a;
-    padding: 8px 16px;
+    padding: 5px 10px;
     border-radius: 20px;
     cursor: pointer;
     font-family: "Georgia", serif;
@@ -1373,7 +1374,7 @@ h3 {
 
 
 #map {
-    height: 100vh;
+    height: calc(100dvh - 265px);
     width: 100%;
     border: 3px solid #6d412a;
 }
@@ -1383,11 +1384,9 @@ h3 {
 
 #map-container {
     margin: 0px 80px 80px 80px;
-    padding: 25px;
+    padding: 18px;
     background-color: #fdf9ee;
     border-radius: 10px;
-    /* box-sizing: border-box; */
-
 }
 
 
