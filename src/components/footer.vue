@@ -50,7 +50,6 @@ function scrollToTop() {
   font-family: 'Georgia', serif;
   border-top: 2px solid #fbe8d3;
   border-bottom: 2px solid #fbe8d3;
-  padding: 5px 0;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
@@ -137,16 +136,22 @@ function scrollToTop() {
     margin-bottom: 20px;
   }
 
+  .footer-right{
+    margin: auto;
+    margin-bottom: 30px;
+  }
+
   .footer-links {
     grid-template-columns: repeat(2, 1fr);
-    column-gap: 30px;
-    row-gap: 15px;
+    column-gap: 35px;
+    row-gap: 30px;
     text-align: center;
     justify-items: center;
   }
 
   .footer-links li {
     text-align: center;
+    margin: 0;
   }
 
   .copyright {
