@@ -1,4 +1,7 @@
 <script setup>
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 </script>
 
 <template>
@@ -7,6 +10,7 @@
       <div class="footer-left">MAP & MUG</div>
       <div class="footer-right">
         <ul class="footer-links">
+          <li><a href="#" @click.prevent="scrollToTop">BACK TO TOP</a></li>
           <li><RouterLink to="/">HOME</RouterLink></li>
           <li><RouterLink to="/map">MAP</RouterLink></li>
           <li><RouterLink to="/reviews">COMMUNITY</RouterLink></li>
@@ -60,14 +64,28 @@
 .footer-links {
   display: grid;
   grid-template-columns: repeat(2, auto);
-  grid-template-rows: repeat(3, auto);
-  grid-auto-flow: column;
+  grid-auto-flow: row;    /* fill rows first */
   column-gap: 50px;
   row-gap: 15px;
   list-style: none;
   margin: 0;
   padding: 0;
 }
+
+.footer-links li:first-child {
+  grid-column: 1 / span 2;
+}
+
+.footer-links li:first-child a {
+  color: #502a15;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.footer-links li:first-child a:hover {
+  color: #fbe8d3; 
+}
+
 
 .footer-links li {
   font-size: 14px;
