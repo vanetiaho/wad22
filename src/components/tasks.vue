@@ -10,7 +10,7 @@
             <h1>Crowd Level Update</h1>
         </RouterLink>
 
-        <RouterLink to="/studyPlanner" class="card">
+        <RouterLink to="/quiz" class="card">
             <h1>Study Quiz <br>AI</h1>
         </RouterLink>
     </div>

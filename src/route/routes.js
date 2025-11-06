@@ -12,7 +12,7 @@ import reviews from '../components/reviews.vue';
 import profile_home from '../components/profile_home.vue'; // add in user icon hover
 import cafe_review from '../components/cafe_review.vue';
 import map from "../components/map.vue";
-import studyPlanner from "@/components/studyPlanner.vue";
+import quiz from "@/components/quiz.vue";
 import camera from "@/components/camera.vue";
 import login_view from "../components/login_view.vue";
 import my_reviews from "../components/my_reviews.vue";
@@ -72,7 +72,7 @@ const routes = [
 	},
 
 	{
-		path: "/my-reviews",
+		path: "/my_reviews",
 		name: "my_reviews",
 		component: my_reviews,
 		meta: { requiresAuth: true, title: "My Reviews" }
@@ -100,10 +100,10 @@ const routes = [
 	},
 
 	{
-		path: "/studyPlanner",
-		name: "studyPlanner",
-		component: studyPlanner,
-		meta: { requiresAuth: true, title: "Study Planner"}
+		path: "/quiz",
+		name: "quiz",
+		component: quiz,
+		meta: { requiresAuth: true, title: "Study Quiz AI"}
 	},
 
 	{
