@@ -554,7 +554,7 @@ function resetQuiz() {
   padding: 15px 40px;
   background-color: #6d412a;
   color: #fdf9ee;
-  border-radius: 8px;
+  border-radius: 25px;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
