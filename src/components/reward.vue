@@ -329,7 +329,7 @@ const closeSuccessModal = () => {
   margin-top: 20px;
   margin-bottom: 30px;
   border: 2px solid #6d412a;
-  border-radius: 8px;
+  border-radius: 25px;
   overflow: hidden;
   width: fit-content;
   margin-left: auto;
@@ -339,22 +339,23 @@ const closeSuccessModal = () => {
 
 .toggleSlider {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 50%;
-  height: 100%;
+  top: 3px;
+  left: 3px;
+  width: calc(50% - 6px);
+  height: calc(100% - 6px);
   background-color: #6d412a;
   transition: transform 0.3s ease;
   z-index: 0;
+  border-radius: 18px;
 }
 
 .toggleSlider.slideRight {
-  transform: translateX(100%);
+  transform: translateX(calc(100% + 6px));
 }
 
 .toggleBtn {
   position: relative;
-  padding: 12px 40px;
+  padding: 12px 32px;
   background-color: transparent;
   color: #6d412a;
   border: none;
@@ -363,6 +364,9 @@ const closeSuccessModal = () => {
   font-weight: 600;
   transition: color 0.3s ease;
   z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .toggleBtn.active {
