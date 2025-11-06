@@ -126,6 +126,7 @@ onMounted(async () => {
 .home-container {
   padding: 40px 80px;
   max-width: 1400px;
+  width: 100%;
   margin: 0 auto;
 }
 
