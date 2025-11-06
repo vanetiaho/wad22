@@ -110,7 +110,7 @@ const routes = [
 		path: "/camera",
 		name: "camera",
 		component: camera,
-		meta: { requiresAuth: true, title: "Camera"}
+		meta: { requiresAuth: true, title: "Study Streaks"}
 	},
 
 	{
