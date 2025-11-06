@@ -12,21 +12,21 @@
     <div v-else class="reviewsGrid">
       <router-link
         v-for="review in reviews"
-        :key="review.reviewId"
-        :to="`/cafe_review/${review.cafeId}`"
+        :key="review.id"
+        :to="`/cafe_review/${review.cafe_id}`"
         class="reviewCard"
       >
         <img
-          :src="getImageUrl(review.cafes?.imageUrl)"
-          :alt="review.cafes?.cafeName"
+          :src="getImageUrl(review.cafes?.image_url)"
+          :alt="review.cafes?.cafe_name"
         />
         <div class="reviewContent">
-          <h3>{{ review.cafes?.cafeName }}</h3>
+          <h3>{{ review.cafes?.cafe_name }}</h3>
           <div class="rating">
             <span v-for="n in 5" :key="n" class="star" :class="{ filled: n <= review.rating }">⭐</span>
           </div>
           <p class="comment">{{ review.comment }}</p>
-          <p class="date">{{ formatDate(review.createdAt) }}</p>
+          <p class="date">{{ formatDate(review.created_at) }}</p>
         </div>
       </router-link>
     </div>
@@ -48,7 +48,10 @@ const getImageUrl = (imageUrl) => {
 }
 
 const formatDate = (dateString) => {
-  return new Date(dateString).toLocaleDateString('en-US', {
+  if (!dateString) return 'No date'
+  const date = new Date(dateString)
+  if (isNaN(date.getTime())) return 'Invalid date'
+  return date.toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'short',
     day: 'numeric'
