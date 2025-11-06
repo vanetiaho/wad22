@@ -10,7 +10,13 @@ Deployment: Vercel
 
 
 ## How to run
-### 1. Clone the Repository
+### 1. Download folder/Clone the Repository
+Download folder:
+- unzip folder
+- go to wad22
+- right click
+- click open in terminal
+Clone the repository:
 ```bash
 git clone https://github.com/vanetiaho/wad22.git
 cd wad22
@@ -27,31 +33,12 @@ Place .env file in the root of the project.
 **b. If the `.env` file is NOT provided**<br>
 Create a .env file in the root directory and add the following variables:
 ```bash
-VITE_SUPABASE_URL=your_supabase_url
-VITE_ANON_KEY=your_supabase_anon_key
-VITE_GROQ_API_KEY=your_groq_api_key
-VITE_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
+VITE_SUPABASE_URL=https://xchbdgltmqopzqetlear.supabase.co
+VITE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhjaGJkZ2x0bXFvcHpxZXRsZWFyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE2OTMxMTYsImV4cCI6MjA3NzI2OTExNn0.zY2iyT48dPK992ebkI9J9mPymALwKsdQCwYUzROl1IA
+VITE_GROQ_API_KEY=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
+VITE_GOOGLE_MAPS_API_KEY="AIzaSyAA7BYRoPVf3JMDTNl1o_SkeLZULU-dpGA"
 ```
-### 4. Generating Your Own API Keys
-#### Supabase
-1. Go to [Supabase](https://supabase.com)
-2. Create a new project.  
-3. In your Supabase dashboard, navigate to Settings → API.  
-4. Copy your Project URL and anon public key.  
-5. Paste them into your `.env` file as shown above.  
-
-#### Groq API
-1. Go to [Groq](https://console.groq.com)
-2. Create a new API key.
-3. Add it to `.env` as VITE_GROQ_API_KEY.
-
-#### Google Maps API
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Enable the Maps JavaScript API.
-3. Generate an API key.
-4. Paste it in `.env` as VITE_GOOGLE_MAPS_API_KEY.
-
-### 5. Run the App Locally
+### 4. Run the App Locally
 Start the development server:
 ```bash
 npm run dev
@@ -62,21 +49,19 @@ http://localhost:5173
 ```
 
 
-## Group members:
-- Vanetia
-- szeteng
-- huai en
-- afra
-- jie ying
-
-
 ## Features
-1. **Interactive Map Integration**
+1. **Home**
+   Use navbar to navigate explore the this webpage
+2. **Map**
+   Explore cafes based on your filtering and find your way there with directions!
+3. **Community**
+   Browse reviews from various cafes and add your own review to earn points!
+4. **Tasks**
+   Earn points by updating Real-Time Crowd Level and test yourself using the study Planner AI
+5. **Rewards**
+   Redeem and use rewards at your favourite cafes
+6. **Study streaks: Pic of the Day**
+    Log in everyday to increase your study streak and earn points
+7. **Profile icon**
+    
 
-2. **User Reviews and Ratings System**
-
-3. **Personal User Profiles and Favorites**
-
-4. **Real-Time Crowd Level Updates and Study Planner**
-
-5. **Study Streak: Pic of the Day**
