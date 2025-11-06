@@ -175,7 +175,7 @@ onBeforeUnmount(() => {
 <template>
   <div class="studyPlannerContainer">
     <div class="tasksHeading">
-      <h1 class="pageTitle">PIC OF <br> THE DAY</h1>
+      <h1 class="pageTitle">Study Streaks</h1>
     </div>
 
     <div class="cameraContainer">
