@@ -1386,6 +1386,8 @@ h3 {
     padding: 25px;
     background-color: #fdf9ee;
     border-radius: 10px;
+    /* box-sizing: border-box; */
+
 }
 
 
@@ -1418,11 +1420,16 @@ h3 {
 
 
 @media (max-width: 768px) {
+    #map-container {
+        margin: 0 10px 20px 10px; /* smaller margins */
+        padding: 15px;             /* smaller padding */
+    }
     #search-bar {
         margin-left: 20px;
+        margin-right: 20px;
     }
     .angle-down-icon {
-        left: 350px;
+        left: 450px;
     }
     .filter-dropdown {
         width: 90vw;
@@ -1436,11 +1443,20 @@ h3 {
 
 
 @media (max-width: 480px) {
+    #map-container {
+        margin: 0 5px 10px 5px;
+        padding: 15px;
+    }
+    #map {
+        height: 50vh; /* still keep padding, but prevent squeezing */
+        min-height: 250px;
+    }
     #search-bar {
         margin-left: 10px;
+        margin-right: 10px;
     }
     .angle-down-icon {
-        left: 250px;
+        left: 320px;
     }
 }
 </style>
