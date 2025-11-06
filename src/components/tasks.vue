@@ -23,7 +23,7 @@
 <style scoped>
 .tasksHeading h1 {
   color: #fbe8d3;
-  margin: 60px 0;
+  margin: 20px 0;
   text-align: center;    
   font-weight: 700;     
 }
@@ -34,7 +34,7 @@
     justify-content: center;
     gap: 20px;             
     padding: 20px;         
-    margin: 50px auto;    
+    margin: 20px auto;    
     max-width: 1200px; 
 }
 

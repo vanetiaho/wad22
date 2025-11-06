@@ -212,7 +212,7 @@ const closeModal = () => {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 60px 20px;
+    padding: 40px 20px 60px 20px;
     min-height: auto;
 }
 
