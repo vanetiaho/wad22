@@ -109,10 +109,10 @@ h1 {
 .browse-btn {
   display: inline-block;
   padding: 15px 40px;
-  background-color: #e2b775;
+  background: linear-gradient(135deg, #F0EDEE 0%, #fbe8d3 100%);
   color: #5c3d2e;
   text-decoration: none;
-  border-radius: 10px;
+  border-radius: 25px;
   font-weight: bold;
   transition: all 0.3s;
 }
@@ -189,8 +189,8 @@ h1 {
   padding: 12px 16px;
   background-color: rgba(122, 28, 28, 0.45); /* slightly darker */
   border: none;
-  border-radius: 12px;
-  color: #e7bf8f;
+  border-radius: 25px;
+  color: white;
   font-weight: bold;
   font-size: 16px;
   cursor: pointer;

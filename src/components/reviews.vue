@@ -303,5 +303,13 @@ onMounted(() => {
   box-shadow: 0 0 6px rgba(166, 124, 82, 0.4);
 }
 
+@media (max-width: 768px) {
+  #search-bar {
+    text-align: center;
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
 
 </style>

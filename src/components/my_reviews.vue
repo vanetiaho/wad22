@@ -23,7 +23,14 @@
         <div class="reviewContent">
           <h3>{{ review.cafes?.cafe_name }}</h3>
           <div class="rating">
-            <span v-for="n in 5" :key="n" class="star" :class="{ filled: n <= review.rating }">⭐</span>
+            <span v-for="n in 5" :key="n" class="star">
+              <svg v-if="n <= review.rating" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#FFD700" viewBox="0 0 24 24">
+                <path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.777 1.4 8.17L12 18.896l-7.334 3.861 1.4-8.17L.132 9.21l8.2-1.192z"/>
+              </svg>
+              <svg v-else xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="#FFD700" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.777 1.4 8.17L12 18.896l-7.334 3.861 1.4-8.17L.132 9.21l8.2-1.192z"/>
+              </svg>
+            </span>
           </div>
           <p class="comment">{{ review.comment }}</p>
           <p class="date">{{ formatDate(review.created_at) }}</p>
@@ -153,12 +160,12 @@ onMounted(async () => {
 }
 
 .star {
-  opacity: 0.3;
+  display: inline-block;
   margin-right: 2px;
 }
 
-.star.filled {
-  opacity: 1;
+.star svg {
+  display: block;
 }
 
 .comment {
