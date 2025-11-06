@@ -8,6 +8,8 @@ const loading = ref(true);
 const error = ref(null);
 const showInsufficientPopup = ref(false);
 const currentUserId = ref(null);
+const flippedCard = ref(null);
+const selectedReward = ref(null);
 
 const fetchActivePoints = async () => {
   try {
@@ -30,11 +32,9 @@ const fetchActivePoints = async () => {
   }
 };
 
-// total active points
 const totalActivePoints = computed(() => {
   return activePoints.value.reduce((sum, point) => sum + point.amount, 0);
 });
-
 
 const formatDate = (dateString) => {
   return new Date(dateString).toLocaleDateString('en-US', {
@@ -51,7 +51,6 @@ const setTab = (tab) => {
 onMounted(async () => {
   loading.value = true;
 
-  // Get current user from Supabase auth
   const { data: { user } } = await supabase.auth.getUser();
 
   if (user) {
@@ -65,33 +64,20 @@ onMounted(async () => {
 });
 
 const rewards = [
-  {
-    id: 'coffee20',
-    title: "20% Off Coffee",
-    cost: 20,
-    description: "Get 20% off any coffee in-store."
-  },
-  {
-    id: 'coffee1for1',
-    title: "1-for-1 Coffee",
-    cost: 50,
-    description: "Buy one coffee and get another free."
-  },
-  {
-    id: 'freecoffee',
-    title: "Free Coffee",
-    cost: 100,
-    description: "Redeem a free drink of your choice."
-  }
+  { id: 'coffee20', title: "20% Off Coffee", cost: 20, description: "Get 20% off any coffee in-store." },
+  { id: 'coffee1for1', title: "1-for-1 Coffee", cost: 50, description: "Buy one coffee and get another free." },
+  { id: 'freecoffee', title: "Free Coffee", cost: 100, description: "Redeem a free drink of your choice." }
 ];
 
-const selectedReward = ref(null);
+const flipCard = (rewardId) => {
+  if (showInsufficientPopup.value) return;
+  flippedCard.value = flippedCard.value === rewardId ? null : rewardId;
+};
 
 const handleRedeemClick = (reward) => {
   if (totalActivePoints.value < reward.cost) {
     showInsufficientPopup.value = true;
 
-    // Auto-hide after 1.8 seconds
     setTimeout(() => {
       showInsufficientPopup.value = false;
     }, 1800);
@@ -99,10 +85,10 @@ const handleRedeemClick = (reward) => {
     return;
   }
 
-  // Enough points → proceed to normal redeem flow
   selectedReward.value = reward;
   redeemReward();
 };
+
 const redeemReward = async () => {
   if (!selectedReward.value) return;
 
@@ -113,7 +99,6 @@ const redeemReward = async () => {
     return;
   }
 
-  // 1. Fetch active, non-used points sorted by oldest first
   const { data: pointRows, error: pointError } = await supabase
     .from("points")
     .select("*")
@@ -129,7 +114,6 @@ const redeemReward = async () => {
   let remaining = reward.cost;
   const updates = [];
 
-  // 2. Mark points as used until cost is met
   for (const p of pointRows) {
     if (remaining <= 0) break;
 
@@ -143,10 +127,8 @@ const redeemReward = async () => {
     remaining -= p.amount;
   }
 
-  // 3. Apply updates
   await Promise.all(updates);
 
-  // 4. Store redeemed reward entry
   await supabase.from("redeemed_rewards").insert({
     user_id: currentUserId.value,
     reward_name: reward.title,
@@ -154,19 +136,9 @@ const redeemReward = async () => {
     redeemed_at: new Date().toISOString()
   });
 
-  // 5. Refresh UI
   await fetchActivePoints();
-
-  closeModal();
   alert("Reward redeemed successfully!");
 };
-const flippedCard = ref(null);
-
-const flipCard = (rewardId) => {
-  if (showInsufficientPopup.value) return; // ✅ DO NOT flip during popup
-  flippedCard.value = flippedCard.value === rewardId ? null : rewardId;
-};
-
 </script>
 
 <template>
