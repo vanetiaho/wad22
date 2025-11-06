@@ -443,8 +443,6 @@ async function submitReview() {
   transform: scale(1.2);
 }
 
-
-/* Heart Button */
 .header-content {
   display: flex;
   justify-content: space-between;
@@ -475,8 +473,7 @@ async function submitReview() {
 .heart-btn-large.is-favourite {
   background-color: rgba(255, 200, 200, 0.95);
 }
-
-/* Success Modal Styles */
+  
 .modalBackdrop {
   position: fixed;
   top: 0;
