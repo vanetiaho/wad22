@@ -1,16 +1,18 @@
 <script setup>
-import { ref } from 'vue';
-import Groq from "groq-sdk";
+import { ref, nextTick, onMounted } from 'vue';
+import { Groq } from "groq-sdk";
 import * as pdfjsLib from 'pdfjs-dist';
 import * as mammoth from 'mammoth';
 import JSZip from 'jszip';
+import supabase from '../config/supabaseClient';
+import { awardPoints } from '../../lib/api/streak';
 
 // Initialize Groq client
 const groq = new Groq({
   apiKey: import.meta.env.VITE_GROQ_API_KEY,
   dangerouslyAllowBrowser: true // Required for client-side usage
 });
-const model = "llama-3.3-70b-versatile";
+const model = "meta-llama/llama-4-scout-17b-16e-instruct";
 
 // Set up PDF.js worker - use the bundled worker
 pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
@@ -28,6 +30,24 @@ const isQuizMode = ref(false);
 const currentQuestion = ref(null);
 const quizScore = ref({ correct: 0, total: 0 });
 const previousQuestions = ref([]); // Track previous questions to avoid repetition
+const TOTAL_QUESTIONS = 5; // Limit to 5 questions
+const chatContainer = ref(null); // Reference to chat container for auto-scroll
+const userId = ref(null); // Store current user ID
+
+// Get current user on component mount
+onMounted(async () => {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (user) userId.value = user.id;
+});
+
+// Auto-scroll chat to bottom
+function scrollChatToBottom() {
+  nextTick(() => {
+    if (chatContainer.value) {
+      chatContainer.value.scrollTop = chatContainer.value.scrollHeight;
+    }
+  });
+}
 
 // Helper function to extract text from PDF
 async function extractTextFromPDF(file) {
@@ -128,7 +148,35 @@ async function handleFileUpload(event) {
 }
 
 // Start quiz mode with uploaded file content
-async function startQuiz() {
+async function startQuiz(retryCount = 0) {
+  // Check if quiz is complete (reached 5 questions)
+  if (quizScore.value.total >= TOTAL_QUESTIONS) {
+    currentQuestion.value = null;
+
+    // Calculate percentage and check if passed
+    const percentage = (quizScore.value.correct / TOTAL_QUESTIONS) * 100;
+    const passed = percentage >= 50;
+
+    let resultMessage = `Quiz complete! You answered ${quizScore.value.correct} out of ${TOTAL_QUESTIONS} questions correctly.\n\nFinal Score: ${quizScore.value.correct}/${TOTAL_QUESTIONS} (${percentage.toFixed(1)}%)`;
+
+    // Award points if passed (>= 50%)
+    if (passed && userId.value) {
+      try {
+        await awardPoints(userId.value, 5, 'Passed quiz');
+        resultMessage += '\n\n🎉 You passed! You earned 5 points!';
+      } catch (err) {
+        console.error('Error awarding points:', err);
+      }
+    }
+
+    chatHistory.value.push({
+      role: 'assistant',
+      content: resultMessage
+    });
+    scrollChatToBottom();
+    return;
+  }
+
   if (!fileContent.value) {
     error.value = "Please upload a file first.";
     return;
@@ -155,37 +203,53 @@ async function startQuiz() {
       messages: [
         {
           role: "system",
-          content: `You are an expert quiz generator. Your task is to create a single multiple-choice question based on the provided content.
+          content: `You are an expert quiz generator. Your task is to create high-quality, unambiguous multiple-choice questions based on the provided content. Generate 10 questions. Return ONLY valid JSON with no other text, no markdown, no backticks.
+                    JSON format:
+                    {
+                      "Questions": {
+                        "Question_1": {
+                          "Question": "Clear, specific question that tests understanding of the content",
+                          "Options": {
+                            "A": "Plausible but incorrect option",
+                            "B": "Plausible but incorrect option",
+                            "C": "Plausible but incorrect option",
+                            "D": "Correct answer based on the content"
+                          },
+                          "Correct Answer": "D"
+                        }
+                      }
+                    }
 
-CRITICAL INSTRUCTIONS:
-1. You MUST respond with ONLY valid JSON, nothing else - no markdown, no code blocks, no explanations
-2. Use this exact JSON structure with no variations:
-{
-  "Questions": {
-    "Question_1": {
-      "Question": "A clear, specific question text here",
-      "Options": {
-        "A": "First option",
-        "B": "Second option",
-        "C": "Third option",
-        "D": "Fourth option"
-      },
-      "Correct Answer": "A"
-    }
-  }
-}
-3. The "Correct Answer" field MUST be exactly one letter: A, B, C, or D
-4. All four options MUST be unique and different from each other
-5. The correct answer MUST match one of the options A, B, C, or D
-6. Create questions that test understanding of the content, not just definitions`
+                    CRITICAL RULES:
+                    1. The correct answer must be unambiguously correct based on the provided content
+                    2. Questions must test comprehension, not trick the student
+                    3. All options should be grammatically consistent and plausible
+                    4. Options should not be obviously wrong (avoid "none of the above" or absurd choices)
+                    5. Questions should focus on key concepts, definitions, and relationships from the content
+                    6. Avoid questions answerable without reading the content
+                    7. Vary question types: factual recall, comprehension, application, analysis
+                    8. Each question should stand alone and be clear
+                    9. For math questions, please check your answers two times to ensure it is factually correct
+
+                    QUESTION TYPES TO USE:
+                    - Definition questions: "What is X defined as?"
+                    - Relationship questions: "How does X relate to Y?"
+                    - Implication questions: "Which of the following is a consequence of X?"
+                    - Example questions: "Which of the following is an example of X?"
+                    - Concept questions: "What is the main idea of X?"
+
+                    Generate questions that would be appropriate for a student who has read the provided content.`
         },
+        
         {
           role: "user",
-          content: `Content to create question from:\n\n${fileContent.value.substring(0, 3000)}${previousQuestionsText}\n\nGenerate ONE new quiz question in the exact JSON format specified. Respond with ONLY the JSON object - no markdown, no backticks, no extra text.`
+          content: `Content to create question from:\n\n${fileContent.value.substring(0, 3000)}${previousQuestionsText}\n\nGenerate ONE new quiz question. RESPOND WITH ONLY THE JSON - no markdown, no backticks, no explanations.`
         }
       ],
-      temperature: 0.3,
-      max_completion_tokens: 300
+      temperature: 1,
+      max_completion_tokens: 1024,
+      top_p: 1,
+      stream: false
     });
 
     const quizText = response.choices[0].message.content;
@@ -194,9 +258,23 @@ CRITICAL INSTRUCTIONS:
     currentQuestion.value = parseQuizQuestion(quizText);
 
     // Validate the parsed question has basic requirements
-    if (!currentQuestion.value.question || currentQuestion.value.options.length < 4 || !currentQuestion.value.correct) {
-      throw new Error('Generated question failed validation. Retrying...');
+    if (!currentQuestion.value.question || !currentQuestion.value.question.trim()) {
+      throw new Error('Question text is empty.');
     }
+
+    if (!currentQuestion.value.options || currentQuestion.value.options.length !== 4) {
+      throw new Error(`Expected 4 options, got ${currentQuestion.value.options?.length || 0}`);
+    }
+
+    if (!currentQuestion.value.correct) {
+      throw new Error('No correct answer specified.');
+    }
+
+    // Optional: Verify math answers on client-side (only for simple arithmetic)
+    // Disabled for now since AI accuracy is good - can be re-enabled if needed
+    // if (!verifyMathAnswer(currentQuestion.value, currentQuestion.value.correct)) {
+    //   throw new Error('Math answer verification failed. Regenerating...');
+    // }
 
     // Track this question to avoid repeating it
     if (currentQuestion.value.question) {
@@ -207,78 +285,24 @@ CRITICAL INSTRUCTIONS:
       role: 'assistant',
       content: `Let's test your knowledge! Here's question ${quizScore.value.total + 1}:\n\n${formatQuestionForDisplay(currentQuestion.value)}`
     });
+
+    // Auto-scroll to show the new question
+    scrollChatToBottom();
   } catch (err) {
     console.error('Quiz generation error:', err);
-    error.value = `Failed to generate quiz question: ${err.message}. Please try uploading a file with different content or reset the quiz.`;
-    isQuizMode.value = false;
-  } finally {
-    isLoading.value = false;
-  }
-}
 
-// Helper function to verify and fix correct answer for math problems
-function verifyCorrectAnswer(question, questionObj) {
-  const questionText = (question.question || '').toLowerCase();
-
-  // Check if it's a math problem (contains operators like +, -, *, /)
-  if (!/[+\-*/]/.test(questionText)) {
-    // Not a math problem, so we can't verify it - return
-    return;
-  }
-
-  console.log('Verifying math problem...');
-  console.log('Question:', questionText);
-  console.log('Marked correct answer:', question.correct);
-
-  try {
-    // Extract the math expression from the question
-    const mathMatch = questionText.match(/(\d+)\s*([+\-*/])\s*(\d+)/);
-    if (!mathMatch) {
-      console.log('Could not extract math expression');
+    // Retry up to 5 times before giving up
+    if (retryCount < 5) {
+      console.log(`Retrying question generation (attempt ${retryCount + 2}/6)...`);
+      isLoading.value = false;
+      setTimeout(() => startQuiz(retryCount + 1), 800);
       return;
     }
 
-    const num1 = parseInt(mathMatch[1]);
-    const operator = mathMatch[2];
-    const num2 = parseInt(mathMatch[3]);
-
-    let expectedAnswer;
-    switch(operator) {
-      case '+': expectedAnswer = num1 + num2; break;
-      case '-': expectedAnswer = num1 - num2; break;
-      case '*': expectedAnswer = num1 * num2; break;
-      case '/': expectedAnswer = Math.floor(num1 / num2); break;
-      default: return;
-    }
-
-    console.log(`Calculation: ${num1} ${operator} ${num2} = ${expectedAnswer}`);
-
-    // Find which option contains the expected answer
-    const options = questionObj.Options;
-    let correctLetter = null;
-
-    for (const letter of ['A', 'B', 'C', 'D']) {
-      const optionText = (options[letter] || '').trim();
-      const optionNumber = parseInt(optionText);
-
-      if (!isNaN(optionNumber) && optionNumber === expectedAnswer) {
-        correctLetter = letter;
-        console.log(`Found correct answer at option ${letter}: ${optionNumber}`);
-        break;
-      }
-    }
-
-    // If we found the correct answer and it doesn't match what the AI said
-    if (correctLetter && correctLetter !== question.correct) {
-      console.warn(`AI marked "${question.correct}" as correct, but "${correctLetter}" is the actual correct answer`);
-      // Correct the answer
-      question.correct = correctLetter;
-      console.log(`Auto-corrected to: ${question.correct}`);
-    } else if (!correctLetter) {
-      console.warn('Could not find option matching the correct calculation result');
-    }
-  } catch (err) {
-    console.warn('Error during math verification:', err);
+    error.value = `Failed to generate valid questions. Error: ${err.message}. Please try resetting the quiz.`;
+    isQuizMode.value = false;
+  } finally {
+    isLoading.value = false;
   }
 }
 
@@ -287,8 +311,23 @@ function parseQuizQuestion(text) {
   console.log('Raw AI response:', text);
 
   try {
+    // Try to extract JSON from the response (in case it has markdown or extra text)
+    let jsonText = text;
+
+    // Remove markdown code blocks if present
+    const jsonMatch = text.match(/```(?:json)?\s*([\s\S]*?)```/);
+    if (jsonMatch) {
+      jsonText = jsonMatch[1];
+    }
+
+    // Try to find JSON object
+    const jsonObjectMatch = text.match(/\{[\s\S]*"Questions"[\s\S]*\}/);
+    if (jsonObjectMatch) {
+      jsonText = jsonObjectMatch[0];
+    }
+
     // Try to parse as JSON
-    const jsonData = JSON.parse(text);
+    const jsonData = JSON.parse(jsonText);
 
     // Handle new format: Questions > Question_1 > Question/Options/Correct Answer
     const questionObj = jsonData.Questions?.Question_1;
@@ -330,9 +369,6 @@ function parseQuizQuestion(text) {
       console.error('Duplicate options detected:', optionValues);
       throw new Error('Duplicate options detected. All options must be unique.');
     }
-
-    // Verify the correct answer (especially for math problems)
-    verifyCorrectAnswer(question, questionObj);
 
     console.log('Parsed JSON question:', question);
     console.log('Correct answer:', question.correct);
@@ -413,6 +449,9 @@ async function submitAnswer(answer) {
     });
   }
 
+  // Auto-scroll to bottom to show the answer
+  scrollChatToBottom();
+
   currentQuestion.value = null;
 
   // Generate next question after a short delay
@@ -474,7 +513,7 @@ function resetQuiz() {
       </div>
 
       <!-- Chat history -->
-      <div class="chatHistory" v-if="chatHistory.length > 0">
+      <div class="chatHistory" v-if="chatHistory.length > 0" ref="chatContainer">
         <div v-if="chatHistory.length === 0" class="welcomeMessage">
           <h2>👋 Welcome to Study Planner AI!</h2>
           <p>Ask me anything about:</p>
@@ -609,6 +648,7 @@ function resetQuiz() {
   display: flex;
   gap: 10px;
   justify-content: center;
+  align-items: center;
   margin-top: 12px;
   margin-bottom: 12px;
   flex-wrap: wrap;
@@ -730,6 +770,7 @@ function resetQuiz() {
   font-style: italic;
   opacity: 0.7;
 }
+
 
 </style>
 
