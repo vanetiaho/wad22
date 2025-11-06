@@ -474,7 +474,7 @@ function resetQuiz() {
 <template>
   <div class="studyPlannerContainer">
     <div class="tasksHeading">
-      <h1 class="tasksTitle">STUDY QUIZ AI</h1>
+      <h1 class="pageTitle">STUDY QUIZ AI</h1>
     </div>
 
     <div class="chatContainer">

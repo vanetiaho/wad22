@@ -273,6 +273,7 @@ onMounted(() => {
 .tasksHeading {
   margin-bottom: 10px;
   margin-top: 10px;
+  padding-top: 10px;
 }
 
 .tasksTitle {

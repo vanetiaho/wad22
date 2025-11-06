@@ -130,6 +130,15 @@
       </button>
     </div>
   </div>
+
+  <!-- Success Modal -->
+  <div v-if="showSuccessModal" class="modalBackdrop"></div>
+  <div v-if="showSuccessModal" class="modal">
+    <div class="modalTitle">{{ successMessage }}</div>
+    <div class="modalActions">
+      <button @click="closeSuccessModal" class="btnOk">OK</button>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -226,13 +235,26 @@ const loading = ref(false)
 const hoverRating = ref(0)
 const newReview = ref({ rating: 0, comment: '', cafe_id: cafeId })
 
+// Success modal
+const showSuccessModal = ref(false)
+const successMessage = ref('')
+
 function setRating(n) { newReview.value.rating = n }
 function setHover(n) { hoverRating.value = n }
 function resetHover() { hoverRating.value = 0 }
 function closeModal() { showModal.value = false }
 
+function closeSuccessModal() {
+  showSuccessModal.value = false
+  successMessage.value = ''
+}
+
 async function submitReview() {
-  if (!newReview.value.comment || !newReview.value.rating) { alert('Please provide both rating and comment.'); return }
+  if (!newReview.value.comment || !newReview.value.rating) {
+    successMessage.value = 'Please provide both rating and comment.'
+    showSuccessModal.value = true
+    return
+  }
 
   loading.value = true
   const { error } = await supabase.from('reviews').insert([{
@@ -245,11 +267,13 @@ async function submitReview() {
   loading.value = false
 
   if (error) {
-    alert('Failed to submit review.')
+    successMessage.value = 'Failed to submit review.'
+    showSuccessModal.value = true
   } else {
     // Award 7 points for submitting a review
     await awardPoints(userId.value, 7, 'Submitted a cafe review')
-    alert('Review added successfully! You earned 7 points!')
+    successMessage.value = 'Review added successfully! You earned 7 points!'
+    showSuccessModal.value = true
     closeModal()
     loadReviews()
   }
@@ -491,5 +515,72 @@ async function submitReview() {
 .icon-back {
   width: 16px;
   height: 16px;
+}
+
+/* Success Modal Styles */
+.modalBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 2000;
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  padding: 15px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  z-index: 2001;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  width: auto;
+  height: auto;
+  min-width: 300px;
+  max-width: 400px;
+}
+
+.modalTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+  margin-bottom: 15px;
+  line-height: 1.5;
+  max-width: 350px;
+}
+
+.modalActions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.btnOk {
+  padding: 12px 40px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  background-color: #d4a574;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btnOk:hover {
+  background-color: #c9985a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(212, 165, 116, 0.3);
 }
 </style>

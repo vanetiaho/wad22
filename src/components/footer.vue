@@ -12,7 +12,7 @@
           <li><RouterLink to="/reviews">COMMUNITY</RouterLink></li>
           <li><RouterLink to="/tasks">TASKS</RouterLink></li>
           <li><RouterLink to="/reward">REWARDS</RouterLink></li>
-          <li><RouterLink to="/camera">STUDY STREAKS⚡</RouterLink></li>
+          <li><RouterLink to="/camera">STUDY STREAKS</RouterLink></li>
         </ul>
       </div>
     </div>

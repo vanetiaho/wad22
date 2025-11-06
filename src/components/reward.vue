@@ -143,7 +143,7 @@ const redeemReward = async () => {
 
 <template>
     <div class="rewardsContainer">
-        <h1 class="tasksTitle">MY REWARDS</h1>
+        <h1 class="pageTitle">MY REWARDS</h1>
 
         <div class="toggleContainer">
             <div class="toggleSlider" :class="{ 'slideRight': activeTab === 'rewards' }"></div>

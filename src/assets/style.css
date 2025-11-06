@@ -328,4 +328,10 @@ footer {
   line-height: 1.6;
 }
 
-
+.pageTitle {
+  font-size: 48px;
+  color: #fbe8d3;
+  margin-bottom: 10px;
+  font-weight: bold;
+  text-align: center;
+}
