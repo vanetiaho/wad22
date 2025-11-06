@@ -1,6 +1,6 @@
 <template>
   <div class="my-reviews-section">
-    <h1>MY REVIEWS</h1>
+    <h1 class="pageTitle">MY REVIEWS</h1>
 
     <div v-if="loading" class="loading">Loading your reviews...</div>
 
@@ -71,11 +71,8 @@ onMounted(async () => {
   padding: 60px 80px;
 }
 
-.my-reviews-section h1 {
-  font-size: 48px;
-  color: #fbe8d3;
-  margin-bottom: 50px;
-  text-align: left;
+.pageTitle {
+  margin-bottom: 30px;
 }
 
 .loading {

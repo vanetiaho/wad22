@@ -6,7 +6,7 @@
     </div>
 
     <div class="quick-stats">
-      <router-link to="/reviews" class="stat-card">
+      <router-link to="/my-reviews" class="stat-card">
         <div class="stat-icon">
           <div class="card-icon"><svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><title>70 Basic icons by Xicons.co</title><path d="M33 48H4a4 4 0 0 1-4-4V20L13 9h20a4 4 0 0 1 4 4v31a4 4 0 0 1-4 4" fill="#e7e9e9"/><path d="M47.2 7.32 40.66.78a2.81 2.81 0 0 0-3.89 0l-18 18a2 2 0 0 0 0 2.8l7.62 7.63a2 2 0 0 0 1.4.58 2 2 0 0 0 1.4-.58l18-18a2.76 2.76 0 0 0 .01-3.89" fill="#f9d74a"/><path fill="#ec5044" d="m31.502 5.992 3.006-3.004 10.49 10.497-3.006 3.004z"/><path d="m29.26 26.4-7.67-7.68a2 2 0 0 0-3.35 1.06L16.6 29.1a2 2 0 0 0 2.29 2.29l9.32-1.65a2 2 0 0 0 1.05-3.34" fill="#edcabb"/><path d="m20.56 30.14-2.71-2.72a.57.57 0 0 0-.58-.14.58.58 0 0 0-.4.45l-.31 1.75a1.68 1.68 0 0 0 1.65 2h.29l1.75-.31a.58.58 0 0 0 .31-1.03" fill="#4d4d4d"/><path d="M0 20h11a2 2 0 0 0 2-2V9Z" fill="#a1a3a4"/></svg></div>
         </div>
