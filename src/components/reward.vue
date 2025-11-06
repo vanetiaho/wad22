@@ -122,7 +122,6 @@ const redeemReward = async (reward) => {
     if (remaining <= 0) break;
 
     if (p.amount > remaining) {
-      // ✅ Split row
       const leftover = p.amount - remaining;
 
       // Mark original row as used
@@ -143,7 +142,6 @@ const redeemReward = async (reward) => {
       remaining = 0;
 
     } else {
-      // ✅ Consume whole row
       updatePromises.push(
         supabase.from('points').update({ is_used: true }).eq('id', p.id)
       );
