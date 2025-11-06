@@ -86,12 +86,23 @@ const favouriteIds = ref(new Set())
 const placeholderImage = 'https://picsum.photos/400/300?random=1'
 const filteredCafes = ref([])
 
+function hasRealImage(cafe) {
+  return Array.isArray(cafe.image_url) ? cafe.image_url.length > 0
+       : typeof cafe.image_url === 'string' && cafe.image_url.trim() !== ''
+}
+
 function filterCafes() {
   const query = searchQuery.value.toLowerCase()
-  filteredCafes.value = cafes.value.filter(cafe =>
+  filteredCafes.value = cafes.value
+    .filter(cafe =>
     cafe.cafe_name.toLowerCase().includes(query) ||
     cafe.address.toLowerCase().includes(query)
-  )
+    )
+    .sort((a, b) => {
+      const aHasImage = hasRealImage(a)
+      const bHasImage = hasRealImage(b)
+      return aHasImage === bHasImage ? 0 : aHasImage ? -1 : 1
+    })
 }
 
 async function loadCafes() {
@@ -110,9 +121,15 @@ async function loadCafes() {
     })
 
     cafes.value = cafeData
-    filteredCafes.value = cafeData
+    filteredCafes.value = cafes.value
+      .sort((a, b) => {
+      const aHasImage = hasRealImage(a)
+      const bHasImage = hasRealImage(b)
+      return aHasImage === bHasImage ? 0 : aHasImage ? -1 : 1
+    })
   }
 }
+
 
 async function loadFavourites() {
   try {
