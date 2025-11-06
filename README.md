@@ -57,3 +57,11 @@ http://localhost:5173
    Check out your activities (reviews, favourites, points and more)
    
 
+## Dummy username and password
+Email: mok@smu.edu.sg
+Username: mokkie
+Password: 123456
+
+Email: chein@smu.edu.sg
+Username: chein
+Password: 987654
