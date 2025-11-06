@@ -30,6 +30,7 @@
         </div>
 
         <!-- Heart Favorite Button -->
+        <div class="header-actions">
         <button 
           @click="toggleFavourite"
           class="heart-btn-large"
@@ -42,6 +43,8 @@
             <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
           </svg>
         </button>
+        <button class="add-review-btn" @click="showModal = true">Add Review</button>
+        </div>
       </div>
     </div>
 
@@ -63,7 +66,6 @@
             </svg>
           </button>
         </div>
-        <button class="add-review-btn" @click="showModal = true">Add Review</button>
       </div>
 
       <!-- Right side: Reviews -->
@@ -369,24 +371,6 @@ async function submitReview() {
   font-weight: bold;
 }
 
-.add-review-btn {
-  position: absolute;
-  bottom: 20px;
-  right: 10px;
-  background-color: #fbe8d3;
-  color: #333;
-  font-size: 15px;
-  border-radius: 15px;
-  width: 100px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-}
-
 .back-btn {
   background: none;
   border: none;
@@ -449,6 +433,13 @@ async function submitReview() {
   align-items: flex-start;
 }
 
+.header-actions {
+  display: flex;
+  justify-content:flex end;
+  gap: 20px;
+  align-items: center;
+}
+
 .heart-btn-large {
   background-color: rgba(255, 255, 255, 0.9);
   border: none;
@@ -464,6 +455,26 @@ async function submitReview() {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   flex-shrink: 0;
 }
+
+.add-review-btn {
+  padding: 10px 16px;
+  background-color: #fbe8d3;
+  color: #333;
+  font-size: 15px;
+  border-radius: 15px;
+  width: 100px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+.add-review-btn:hover {
+  background-color: #e6d2b8;
+}
+
 
 .heart-btn-large:hover {
   transform: scale(1.15);
