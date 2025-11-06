@@ -175,7 +175,7 @@ onBeforeUnmount(() => {
 <template>
   <div class="studyPlannerContainer">
     <div class="tasksHeading">
-      <h1 class="tasksTitle">PIC OF <br> THE DAY</h1>
+      <h1 class="tasksTitle">PICURE OF <br> THE DAY</h1>
     </div>
 
     <div class="cameraContainer">
@@ -254,6 +254,12 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+h1 {
+  color: #fbe8d3;
+  text-align: center;    
+  font-weight: 700;     
+}
+
 .studyPlannerContainer {
   max-width: 900px;
   margin: 0 auto;

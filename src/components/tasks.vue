@@ -21,6 +21,13 @@
 </template>
 
 <style scoped>
+.tasksHeading h1 {
+  color: #fbe8d3;
+  margin: 60px 0;
+  text-align: center;    
+  font-weight: 700;     
+}
+
 .cardContainer {
     display: flex;
     flex-wrap: wrap;       /* allows cards to move to next line if needed */
