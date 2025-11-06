@@ -2,7 +2,6 @@
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import supabase from '../config/supabaseClient'
 import { awardPoints } from '../../lib/api/streak'
-// console.log(supabase);
 
 
 const cafes = ref([]);
@@ -74,11 +73,7 @@ const setCrowdLevel = (level) => {
 
 
 // insert into supabase
-
-
-// Submit crowd level data to Supabase
 const submitCrowdLevel = async () => {
-  // Validate inputs
   if (!selectedCafe.value) {
     successMessage.value = 'Please select a cafe';
     showSuccessModal.value = true;
@@ -112,14 +107,13 @@ const submitCrowdLevel = async () => {
       successMessage.value = `Failed to submit crowd level: ${error.message}`;
       showSuccessModal.value = true;
     } else {
-      // Award 1 point for submitting a crowd level update
-      await awardPoints(userId.value, 1, 'Submitted a crowd level update')
-      successMessage.value = 'Crowd level submitted successfully! You earned 1 point!';
-      showSuccessModal.value = true;
-      // reset form
-      selectedCafe.value = '';
-      crowdLevel.value = 0;
-      comments.value = '';
+        await awardPoints(userId.value, 1, 'Submitted a crowd level update')
+        successMessage.value = 'Crowd level submitted successfully! You earned 1 point!';
+        showSuccessModal.value = true;
+
+        selectedCafe.value = '';
+        crowdLevel.value = 0;
+        comments.value = '';
     }
   } catch (err) {
     console.error('Unexpected error:', err);
@@ -196,7 +190,6 @@ const closeModal = () => {
         </div>
     </div>
 
-    <!-- Success Modal -->
     <div v-if="showSuccessModal" class="modalBackdrop"></div>
     <div v-if="showSuccessModal" class="modal">
         <div class="modalTitle">{{ successMessage }}</div>
@@ -360,7 +353,7 @@ const closeModal = () => {
 }
 
 .submitButton {
-    width: 100%;
+    width: auto;
     padding: 16px 32px;
     font-size: 16px;
     font-weight: 600;
@@ -368,7 +361,7 @@ const closeModal = () => {
     color: #fff;
     background-color: #d4a574;
     border: none;
-    border-radius: 8px;
+    border-radius: 50px;
     cursor: pointer;
     transition: all 0.3s ease;
     box-sizing: border-box;
@@ -512,7 +505,7 @@ const closeModal = () => {
     color: #fff;
     background-color: #d4a574;
     border: none;
-    border-radius: 8px;
+    border-radius: 50px;
     cursor: pointer;
     transition: all 0.3s ease;
 }

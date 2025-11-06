@@ -7,20 +7,19 @@ import JSZip from 'jszip';
 import supabase from '../config/supabaseClient';
 import { awardPoints } from '../../lib/api/streak';
 
-// Initialize Groq client
 const groq = new Groq({
   apiKey: import.meta.env.VITE_GROQ_API_KEY,
-  dangerouslyAllowBrowser: true // Required for client-side usage
+  dangerouslyAllowBrowser: true 
 });
 const model = "meta-llama/llama-4-scout-17b-16e-instruct";
 
-// Set up PDF.js worker - use the bundled worker
+// PDF.js worker
 pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
   'pdfjs-dist/build/pdf.worker.min.mjs',
   import.meta.url,
 ).href;
 
-// Component state
+
 const chatHistory = ref([]);
 const isLoading = ref(false);
 const error = ref(null);
@@ -29,18 +28,18 @@ const fileContent = ref('');
 const isQuizMode = ref(false);
 const currentQuestion = ref(null);
 const quizScore = ref({ correct: 0, total: 0 });
-const previousQuestions = ref([]); // Track previous questions to avoid repetition
-const TOTAL_QUESTIONS = 5; // Limit to 5 questions
-const chatContainer = ref(null); // Reference to chat container for auto-scroll
-const userId = ref(null); // Store current user ID
+const previousQuestions = ref([]);
+const TOTAL_QUESTIONS = 5;
+const chatContainer = ref(null);
+const userId = ref(null);
 
-// Get current user on component mount
+
 onMounted(async () => {
   const { data: { user } } = await supabase.auth.getUser();
   if (user) userId.value = user.id;
 });
 
-// Auto-scroll chat to bottom
+
 function scrollChatToBottom() {
   nextTick(() => {
     if (chatContainer.value) {
@@ -49,7 +48,7 @@ function scrollChatToBottom() {
   });
 }
 
-// Helper function to extract text from PDF
+// extract text from PDF
 async function extractTextFromPDF(file) {
   const arrayBuffer = await file.arrayBuffer();
   const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
@@ -65,14 +64,14 @@ async function extractTextFromPDF(file) {
   return text;
 }
 
-// Helper function to extract text from DOCX
+// extract text from DOCX
 async function extractTextFromDOCX(file) {
   const arrayBuffer = await file.arrayBuffer();
   const result = await mammoth.extractRawText({ arrayBuffer });
   return result.value;
 }
 
-// Helper function to extract text from PPTX
+// extract text from PPTX
 async function extractTextFromPPTX(file) {
   const arrayBuffer = await file.arrayBuffer();
   const zip = new JSZip();
@@ -81,12 +80,11 @@ async function extractTextFromPPTX(file) {
   let text = '';
   let slideCount = 0;
 
-  // Extract text from slide XMLs
+  // extract text from slide XMLs
   for (const filename in zip.files) {
     if (filename.startsWith('ppt/slides/slide') && filename.endsWith('.xml')) {
       slideCount++;
       const content = await zip.files[filename].async('string');
-      // Extract text from XML tags
       const textMatches = content.match(/<a:t>([^<]*)<\/a:t>/g);
       if (textMatches) {
         text += `\n=== Slide ${slideCount} ===\n`;
@@ -103,7 +101,6 @@ async function extractTextFromPPTX(file) {
   return text || 'No text found in presentation';
 }
 
-// File upload handler with multi-format support
 async function handleFileUpload(event) {
   const file = event.target.files[0];
   if (!file) return;
@@ -130,13 +127,11 @@ async function handleFileUpload(event) {
 
     fileContent.value = text;
 
-    // Add message about file upload
     chatHistory.value.push({
       role: 'system',
       content: `📄 File uploaded: ${file.name} (${(file.size / 1024).toFixed(2)} KB)`
     });
 
-    // Automatically start quiz mode
     await startQuiz();
   } catch (err) {
     error.value = `Failed to read file: ${err.message || 'Please try again.'}`;
@@ -147,19 +142,15 @@ async function handleFileUpload(event) {
   }
 }
 
-// Start quiz mode with uploaded file content
 async function startQuiz(retryCount = 0) {
-  // Check if quiz is complete (reached 5 questions)
   if (quizScore.value.total >= TOTAL_QUESTIONS) {
     currentQuestion.value = null;
 
-    // Calculate percentage and check if passed
     const percentage = (quizScore.value.correct / TOTAL_QUESTIONS) * 100;
     const passed = percentage >= 50;
 
     let resultMessage = `Quiz complete! You answered ${quizScore.value.correct} out of ${TOTAL_QUESTIONS} questions correctly.\n\nFinal Score: ${quizScore.value.correct}/${TOTAL_QUESTIONS} (${percentage.toFixed(1)}%)`;
 
-    // Award points if passed (>= 50%)
     if (passed && userId.value) {
       try {
         await awardPoints(userId.value, 1, 'Passed quiz');
@@ -182,7 +173,6 @@ async function startQuiz(retryCount = 0) {
     return;
   }
 
-  // Validate that we have enough content for quiz generation
   if (fileContent.value.trim().length < 100) {
     error.value = "File content is too short. Please upload a file with more substantial content.";
     return;
@@ -190,10 +180,9 @@ async function startQuiz(retryCount = 0) {
 
   isLoading.value = true;
   isQuizMode.value = true;
-  error.value = null; // Clear previous errors
+  error.value = null; 
 
   try {
-    // Build list of previously asked questions to avoid repetition
     const previousQuestionsText = previousQuestions.value.length > 0
       ? `\n\nIMPORTANT: DO NOT generate these exact questions again:\n${previousQuestions.value.map((q, i) => `${i + 1}. ${q}`).join('\n')}`
       : '';
@@ -257,7 +246,6 @@ async function startQuiz(retryCount = 0) {
 
     currentQuestion.value = parseQuizQuestion(quizText);
 
-    // Validate the parsed question has basic requirements
     if (!currentQuestion.value.question || !currentQuestion.value.question.trim()) {
       throw new Error('Question text is empty.');
     }
@@ -270,13 +258,6 @@ async function startQuiz(retryCount = 0) {
       throw new Error('No correct answer specified.');
     }
 
-    // Optional: Verify math answers on client-side (only for simple arithmetic)
-    // Disabled for now since AI accuracy is good - can be re-enabled if needed
-    // if (!verifyMathAnswer(currentQuestion.value, currentQuestion.value.correct)) {
-    //   throw new Error('Math answer verification failed. Regenerating...');
-    // }
-
-    // Track this question to avoid repeating it
     if (currentQuestion.value.question) {
       previousQuestions.value.push(currentQuestion.value.question);
     }
@@ -286,12 +267,10 @@ async function startQuiz(retryCount = 0) {
       content: `Let's test your knowledge! Here's question ${quizScore.value.total + 1}:\n\n${formatQuestionForDisplay(currentQuestion.value)}`
     });
 
-    // Auto-scroll to show the new question
     scrollChatToBottom();
   } catch (err) {
     console.error('Quiz generation error:', err);
 
-    // Retry up to 5 times before giving up
     if (retryCount < 5) {
       console.log(`Retrying question generation (attempt ${retryCount + 2}/6)...`);
       isLoading.value = false;
@@ -306,30 +285,28 @@ async function startQuiz(retryCount = 0) {
   }
 }
 
-// Parse quiz question from AI response (expects new JSON format)
+// parse quiz question from AI response
 function parseQuizQuestion(text) {
   console.log('Raw AI response:', text);
 
   try {
-    // Try to extract JSON from the response (in case it has markdown or extra text)
+    //extract JSON from the response
     let jsonText = text;
 
-    // Remove markdown code blocks if present
     const jsonMatch = text.match(/```(?:json)?\s*([\s\S]*?)```/);
     if (jsonMatch) {
       jsonText = jsonMatch[1];
     }
 
-    // Try to find JSON object
+    // find JSON object
     const jsonObjectMatch = text.match(/\{[\s\S]*"Questions"[\s\S]*\}/);
     if (jsonObjectMatch) {
       jsonText = jsonObjectMatch[0];
     }
 
-    // Try to parse as JSON
+    // parse as JSON
     const jsonData = JSON.parse(jsonText);
 
-    // Handle new format: Questions > Question_1 > Question/Options/Correct Answer
     const questionObj = jsonData.Questions?.Question_1;
     if (!questionObj) {
       throw new Error('Invalid JSON structure: missing Questions.Question_1');
@@ -341,7 +318,6 @@ function parseQuizQuestion(text) {
       correct: (questionObj['Correct Answer'] || '').toUpperCase()
     };
 
-    // Convert options object to array format
     if (questionObj.Options && typeof questionObj.Options === 'object') {
       ['A', 'B', 'C', 'D'].forEach(letter => {
         if (questionObj.Options[letter]) {
@@ -350,19 +326,16 @@ function parseQuizQuestion(text) {
       });
     }
 
-    // Validate that the correct answer letter is valid (A, B, C, or D)
     if (!['A', 'B', 'C', 'D'].includes(question.correct)) {
       console.error('Invalid correct answer letter:', question.correct);
       throw new Error(`Invalid correct answer: ${question.correct}. Must be A, B, C, or D`);
     }
 
-    // Validate that we have exactly 4 options
     if (question.options.length !== 4) {
       console.error('Invalid number of options:', question.options.length);
       throw new Error(`Invalid number of options: ${question.options.length}. Must be exactly 4`);
     }
 
-    // Validate that all options are unique (extract just the values)
     const optionValues = ['A', 'B', 'C', 'D'].map(letter => (questionObj.Options[letter] || '').trim());
     const uniqueOptions = new Set(optionValues);
     if (uniqueOptions.size !== 4) {
@@ -376,7 +349,6 @@ function parseQuizQuestion(text) {
   } catch (err) {
     console.warn('Failed to parse new JSON format:', err);
 
-    // Fallback to old format for backward compatibility
     try {
       const jsonData = JSON.parse(text);
       const question = {
@@ -406,13 +378,11 @@ function parseQuizQuestion(text) {
   }
 }
 
-// Format question for display
 function formatQuestionForDisplay(q) {
   if (!q) return '';
   return `${q.question}\n\n${q.options.join('\n')}`;
 }
 
-// Handle quiz answer
 async function submitAnswer(answer) {
   if (!currentQuestion.value) return;
 
@@ -420,7 +390,6 @@ async function submitAnswer(answer) {
   const correctAnswer = currentQuestion.value.correct.toUpperCase();
   const isCorrect = userAnswer === correctAnswer;
 
-  // Debug log
   console.log('Question:', currentQuestion.value.question);
   console.log('Correct answer stored:', correctAnswer);
   console.log('User answer:', userAnswer);
@@ -449,12 +418,10 @@ async function submitAnswer(answer) {
     });
   }
 
-  // Auto-scroll to bottom to show the answer
   scrollChatToBottom();
 
   currentQuestion.value = null;
 
-  // Generate next question after a short delay
   setTimeout(() => startQuiz(), 1000);
 }
 
@@ -467,7 +434,7 @@ function resetQuiz() {
   quizScore.value = { correct: 0, total: 0 };
   chatHistory.value = [];
   error.value = null;
-  previousQuestions.value = []; // Clear tracked questions
+  previousQuestions.value = []; 
 }
 </script>
 
@@ -478,7 +445,6 @@ function resetQuiz() {
     </div>
 
     <div class="chatContainer">
-      <!-- File upload section -->
       <div v-if="!isQuizMode" class="uploadSection">
         <div class="welcomeMessage">
           <h2>📚 Upload Your Study Material</h2>
@@ -501,18 +467,15 @@ function resetQuiz() {
         </div>
       </div>
 
-      <!-- Error message -->
       <div v-if="error" class="errorMessage">
         {{ error }}
       </div>
 
-      <!-- Quiz score display -->
       <div v-if="isQuizMode" class="scoreDisplay">
         Score: {{ quizScore.correct }} / {{ quizScore.total }}
         <button @click="resetQuiz" class="resetBtn">Reset Quiz</button>
       </div>
 
-      <!-- Chat history -->
       <div class="chatHistory" v-if="chatHistory.length > 0" ref="chatContainer">
         <div v-if="chatHistory.length === 0" class="welcomeMessage">
           <h2>👋 Welcome to Study Planner AI!</h2>
@@ -546,7 +509,6 @@ function resetQuiz() {
         </div>
       </div>
 
-      <!-- Quiz answer buttons -->
       <div v-if="isQuizMode && currentQuestion" class="answerButtons">
         <button
           v-for="option in ['A', 'B', 'C', 'D']"

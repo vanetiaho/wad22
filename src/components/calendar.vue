@@ -4,19 +4,18 @@ import supabase from '../config/supabaseClient';
 import { getUserStreak } from '../../lib/api/streak';
 
 const currentDate = ref(new Date());
-const photosData = ref({}); // { 'YYYY-MM-DD': [{ url, timestamp }] }
+const photosData = ref({});
 const loading = ref(true);
 const selectedDate = ref(null);
 const showModal = ref(false);
 const currentStreak = ref(0);
 
-// Get current user
+
 const getCurrentUser = async () => {
   const { data: { user }, error } = await supabase.auth.getUser();
   return { user, error };
 };
 
-// Fetch all photos from Supabase storage for current user
 const fetchPhotos = async () => {
   try {
     loading.value = true;
@@ -28,7 +27,6 @@ const fetchPhotos = async () => {
       return;
     }
 
-    // List all files in user's folder
     const { data, error: listError } = await supabase.storage
       .from('photos')
       .list(user.id);
@@ -41,21 +39,17 @@ const fetchPhotos = async () => {
 
     photosData.value = {};
 
-    // Process each photo
     if (data && data.length > 0) {
       for (const file of data) {
-        // Extract timestamp from filename (format: {timestamp}.png)
         const timestamp = parseInt(file.name.split('.')[0]);
         if (!isNaN(timestamp)) {
           const photoDate = new Date(timestamp);
           const dateKey = formatDateKey(photoDate);
 
-          // Get public URL
           const { data: { publicUrl } } = supabase.storage
             .from('photos')
             .getPublicUrl(`${user.id}/${file.name}`);
 
-          // Group photos by date
           if (!photosData.value[dateKey]) {
             photosData.value[dateKey] = [];
           }
@@ -67,7 +61,6 @@ const fetchPhotos = async () => {
       }
     }
 
-    // Fetch current streak
     const streak = await getUserStreak(user.id);
     currentStreak.value = streak;
 
@@ -78,7 +71,6 @@ const fetchPhotos = async () => {
   }
 };
 
-// Format date as YYYY-MM-DD for grouping
 const formatDateKey = (date) => {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -86,23 +78,19 @@ const formatDateKey = (date) => {
   return `${year}-${month}-${day}`;
 };
 
-// Get calendar grid for current month
 const calendarDays = computed(() => {
   const year = currentDate.value.getFullYear();
   const month = currentDate.value.getMonth();
 
-  // First day of month and number of days
   const firstDay = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
 
   const days = [];
 
-  // Add empty slots for days before month starts
   for (let i = 0; i < firstDay; i++) {
     days.push(null);
   }
 
-  // Add all days of the month
   for (let day = 1; day <= daysInMonth; day++) {
     days.push(day);
   }
@@ -110,7 +98,6 @@ const calendarDays = computed(() => {
   return days;
 });
 
-// Check if a date has photos
 const hasPhotos = (day) => {
   if (!day) return false;
   const year = currentDate.value.getFullYear();
@@ -119,7 +106,6 @@ const hasPhotos = (day) => {
   return photosData.value[dateKey] && photosData.value[dateKey].length > 0;
 };
 
-// Get photos for a specific date
 const getPhotosForDate = (day) => {
   if (!day) return [];
   const year = currentDate.value.getFullYear();
@@ -128,7 +114,6 @@ const getPhotosForDate = (day) => {
   return photosData.value[dateKey] || [];
 };
 
-// Navigate to previous month
 const previousMonth = () => {
   currentDate.value = new Date(
     currentDate.value.getFullYear(),
@@ -137,7 +122,6 @@ const previousMonth = () => {
   );
 };
 
-// Navigate to next month
 const nextMonth = () => {
   currentDate.value = new Date(
     currentDate.value.getFullYear(),
@@ -146,7 +130,6 @@ const nextMonth = () => {
   );
 };
 
-// Open modal for a date
 const openPhotosModal = (day) => {
   if (hasPhotos(day)) {
     selectedDate.value = day;
@@ -154,13 +137,11 @@ const openPhotosModal = (day) => {
   }
 };
 
-// Close modal
 const closeModal = () => {
   showModal.value = false;
   selectedDate.value = null;
 };
 
-// Format month and year header
 const monthYearHeader = computed(() => {
   return currentDate.value.toLocaleDateString('en-US', {
     month: 'long',
@@ -181,28 +162,23 @@ onMounted(() => {
     </div>
 
     <div class="calendarWrapper">
-      <!-- Streak indicator -->
       <div class="streakIndicator" v-if="currentStreak > 0">
         <span class="streakFire"><svg width="30" height="30" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="iconify iconify--noto"><radialGradient id="a" cx="68.884" cy="124.296" r="70.587" gradientTransform="rotate(-179.751 65.907 -39.816)scale(1 -1.64082)" gradientUnits="userSpaceOnUse"><stop offset=".314" stop-color="#ff9800"/><stop offset=".662" stop-color="#ff6d00"/><stop offset=".972" stop-color="#f44336"/></radialGradient><path d="M35.56 40.73c-.57 6.08-.97 16.84 2.62 21.42 0 0-1.69-11.82 13.46-26.65 6.1-5.97 7.51-14.09 5.38-20.18-1.21-3.45-3.42-6.3-5.34-8.29-1.12-1.17-.26-3.1 1.37-3.03 9.86.44 25.84 3.18 32.63 20.22 2.98 7.48 3.2 15.21 1.78 23.07-.9 5.02-4.1 16.18 3.2 17.55 5.21.98 7.73-3.16 8.86-6.14.47-1.24 2.1-1.55 2.98-.56 8.8 10.01 9.55 21.8 7.73 31.95-3.52 19.62-23.39 33.9-43.13 33.9-24.66 0-44.29-14.11-49.38-39.65-2.05-10.31-1.01-30.71 14.89-45.11 1.18-1.08 3.11-.12 2.95 1.5" fill="url(#a)"/><radialGradient id="b" cx="64.921" cy="54.062" r="73.86" gradientTransform="rotate(90.579 18.654 7.312)scale(1 -.7525)" gradientUnits="userSpaceOnUse"><stop offset=".214" stop-color="#fff176"/><stop offset=".328" stop-color="#fff27d"/><stop offset=".487" stop-color="#fff48f"/><stop offset=".672" stop-color="#fff7ad"/><stop offset=".793" stop-color="#fff9c4"/><stop offset=".822" stop-color="#fff8bd" stop-opacity=".804"/><stop offset=".863" stop-color="#fff6ab" stop-opacity=".529"/><stop offset=".91" stop-color="#fff38d" stop-opacity=".209"/><stop offset=".941" stop-color="#fff176" stop-opacity="0"/></radialGradient><path d="M76.11 77.42c-9.09-11.7-5.02-25.05-2.79-30.37.3-.7-.5-1.36-1.13-.93-3.91 2.66-11.92 8.92-15.65 17.73-5.05 11.91-4.69 17.74-1.7 24.86 1.8 4.29-.29 5.2-1.34 5.36-1.02.16-1.96-.52-2.71-1.23a16.1 16.1 0 0 1-4.44-7.6c-.16-.62-.97-.79-1.34-.28-2.8 3.87-4.25 10.08-4.32 14.47C40.47 113 51.68 124 65.24 124c17.09 0 29.54-18.9 19.72-34.7-2.85-4.6-5.53-7.61-8.85-11.88" fill="url(#b)"/></svg></span>
         <span class="streakCount">{{ currentStreak }} day streak!</span>
       </div>
 
-      <!-- Header with month navigation -->
       <div class="calendarHeader">
         <button @click="previousMonth" class="navBtn">← Previous</button>
         <h2 class="monthYear">{{ monthYearHeader }}</h2>
         <button @click="nextMonth" class="navBtn">Next →</button>
       </div>
 
-      <!-- Loading state -->
       <div v-if="loading" class="loadingState">
         <div class="spinner"></div>
         <p>Loading your photos...</p>
       </div>
 
-      <!-- Calendar grid -->
       <div v-else class="calendarGrid">
-        <!-- Day headers -->
         <div class="dayHeader">Sun</div>
         <div class="dayHeader">Mon</div>
         <div class="dayHeader">Tue</div>
@@ -211,7 +187,6 @@ onMounted(() => {
         <div class="dayHeader">Fri</div>
         <div class="dayHeader">Sat</div>
 
-        <!-- Calendar days -->
         <div
           v-for="(day, index) in calendarDays"
           :key="index"
@@ -232,13 +207,11 @@ onMounted(() => {
         </div>
       </div>
 
-      <!-- No photos message -->
       <div v-if="!loading && Object.keys(photosData).length === 0" class="noPhotosMessage">
         <p>📸 No pictures yet. Start taking photos with the camera!</p>
       </div>
     </div>
 
-    <!-- Photo modal -->
     <div v-if="showModal" class="modalOverlay" @click="closeModal">
       <div class="modalContent" @click.stop>
         <div class="modalHeader">
@@ -329,7 +302,7 @@ onMounted(() => {
   background-color: #6d412a;
   color: #fdf9ee;
   border: none;
-  border-radius: 8px;
+  border-radius: 50px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;

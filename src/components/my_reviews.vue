@@ -1,32 +1,32 @@
 <template>
-  <div class="my-reviews-section">
+  <div class="myReviewsSection">
     <h1 class="pageTitle">MY REVIEWS</h1>
 
     <div v-if="loading" class="loading">Loading your reviews...</div>
 
-    <div v-else-if="reviews.length === 0" class="no-reviews">
+    <div v-else-if="reviews.length === 0" class="noReviews">
       <p>You haven't reviewed any cafes yet.</p>
-      <router-link to="/reviews" class="browse-btn">Browse Cafes</router-link>
+      <router-link to="/reviews" class="browseBtn">Browse Cafes</router-link>
     </div>
 
-    <div v-else class="reviews-grid">
+    <div v-else class="reviewsGrid">
       <router-link
         v-for="review in reviews"
-        :key="review.review_id"
-        :to="`/cafe_review/${review.cafe_id}`"
-        class="review-card"
+        :key="review.reviewId"
+        :to="`/cafe_review/${review.cafeId}`"
+        class="reviewCard"
       >
         <img
-          :src="getImageUrl(review.cafes?.image_url)"
-          :alt="review.cafes?.cafe_name"
+          :src="getImageUrl(review.cafes?.imageUrl)"
+          :alt="review.cafes?.cafeName"
         />
-        <div class="review-content">
-          <h3>{{ review.cafes?.cafe_name }}</h3>
+        <div class="reviewContent">
+          <h3>{{ review.cafes?.cafeName }}</h3>
           <div class="rating">
             <span v-for="n in 5" :key="n" class="star" :class="{ filled: n <= review.rating }">⭐</span>
           </div>
           <p class="comment">{{ review.comment }}</p>
-          <p class="date">{{ formatDate(review.created_at) }}</p>
+          <p class="date">{{ formatDate(review.createdAt) }}</p>
         </div>
       </router-link>
     </div>
@@ -67,7 +67,7 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.my-reviews-section {
+.myReviewsSection {
   padding: 60px 80px;
 }
 
@@ -82,18 +82,18 @@ onMounted(async () => {
   padding: 100px 0;
 }
 
-.no-reviews {
+.noReviews {
   text-align: center;
   color: #fbe8d3;
   padding: 100px 0;
 }
 
-.no-reviews p {
+.noReviews p {
   font-size: 20px;
   margin-bottom: 30px;
 }
 
-.browse-btn {
+.browseBtn {
   display: inline-block;
   padding: 15px 40px;
   background-color: #e2b775;
@@ -104,18 +104,18 @@ onMounted(async () => {
   transition: all 0.3s;
 }
 
-.browse-btn:hover {
+.browseBtn:hover {
   background-color: #d4a95f;
   transform: translateY(-3px);
 }
 
-.reviews-grid {
+.reviewsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 40px;
 }
 
-.review-card {
+.reviewCard {
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 12px;
   overflow: hidden;
@@ -124,22 +124,22 @@ onMounted(async () => {
   color: inherit;
 }
 
-.review-card:hover {
+.reviewCard:hover {
   transform: translateY(-8px);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
-.review-card img {
+.reviewCard img {
   width: 100%;
   height: 200px;
   object-fit: cover;
 }
 
-.review-content {
+.reviewContent {
   padding: 20px;
 }
 
-.review-content h3 {
+.reviewContent h3 {
   font-size: 20px;
   color: #fbe8d3;
   margin-bottom: 10px;
@@ -172,11 +172,11 @@ onMounted(async () => {
 }
 
 @media (max-width: 768px) {
-  .my-reviews-section {
+  .myReviewsSection {
     padding: 30px 20px;
   }
 
-  .my-reviews-section h1 {
+  .myReviewsSection h1 {
     font-size: 32px;
   }
 }

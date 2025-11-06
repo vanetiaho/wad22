@@ -18,10 +18,10 @@
 
 <style scoped>
 .tasksHeading h1 {
-  color: #fbe8d3;
-  margin: 20px 0;
-  text-align: center;    
-  font-weight: 700;     
+    color: #fbe8d3;
+    margin: 20px 0;
+    text-align: center;    
+    font-weight: 700;     
 }
 
 .cardContainer {
