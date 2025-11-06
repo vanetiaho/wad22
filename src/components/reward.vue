@@ -13,9 +13,9 @@ const totalActivePoints = computed(() => activePoints.value.reduce((s, p) => s +
 
 // --- Rewards available to redeem (static catalog) ---
 const rewards = [
-  { id: 'coffee20', title: "20% Off Coffee", cost: 20, description: "Get 20% off any coffee in-store." },
-  { id: 'coffee1for1', title: "1-for-1 Coffee", cost: 50, description: "Buy one coffee and get another free." },
-  { id: 'freecoffee', title: "Free Coffee", cost: 100, description: "Redeem a free drink of your choice." }
+  { id: 'coffee20', title: "20% Off Coffee", cost: 2, description: "Get 20% off any coffee in-store." },
+  { id: 'coffee1for1', title: "1-for-1 Coffee", cost: 5, description: "Buy one coffee and get another free." },
+  { id: 'freecoffee', title: "Free Coffee", cost: 10, description: "Redeem a free drink of your choice." }
 ];
 
 // --- Redeemed rewards (My Rewards) ---
