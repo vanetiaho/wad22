@@ -54,7 +54,7 @@ export function useAuth() {
 					.single();
 
 				if (profileError || !profileData) {
-					throw new Error("Invalid username or password");
+					throw new Error("Invalid email or password");
 				}
 
 				email = profileData.email;

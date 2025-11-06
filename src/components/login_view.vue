@@ -23,7 +23,7 @@
               v-model="formData.email"
               type="text"
               required
-              :placeholder="isLogin ? 'Email or Username' : 'Email'"
+              :placeholder="isLogin ? 'Email' : 'Email'"
           />
           </div>
         
