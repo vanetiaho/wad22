@@ -40,7 +40,7 @@ const routes = [
 		path: "/profile_home",
 		name: "profile_home",
 		component: profile_home,
-		meta: { requiresAuth: true, title: "Profile_home" },
+		meta: { requiresAuth: true, title: "Profile Home" },
 	},
 
 	{
