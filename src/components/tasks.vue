@@ -6,17 +6,13 @@
         <h1 class="pageTitle">CHOOSE A TASK TO<br>EARN REWARDS</h1>
     </div>
     <div class="cardContainer">
-        <div class="card">
-            <RouterLink to="/crowd">
+        <RouterLink to="/crowd" class="card">
             <h1>Crowd Level Update</h1>
-            </RouterLink>
-        </div>
+        </RouterLink>
 
-        <div class="card">
-            <RouterLink to="/studyPlanner">
-            <h1>Study Plan Update</h1>
-            </RouterLink>
-        </div>
+        <RouterLink to="/studyPlanner" class="card">
+            <h1>Study Quiz <br>AI</h1>
+        </RouterLink>
     </div>
 </template>
 
@@ -52,15 +48,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    text-decoration: none;
 }
 
 .card:hover {
     box-shadow: 0 15px 25px 0 rgba(0,0,0,0.2);
-}
-
-.card a {
-    text-decoration: none;
-    color: inherit;
 }
 
 </style>
